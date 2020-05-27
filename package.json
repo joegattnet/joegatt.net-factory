@@ -1,0 +1,31 @@
+{
+  "name": "joegatt.net-gardener",
+  "version": "1.0.0",
+  "description": "Various services to groom notes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Joe Gatt",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "htmlparser2": "^4.1.0",
+    "hyphenated": "^1.2.0",
+    "hyphenated-en-gb": "^1.2.0",
+    "pg": "^8.2.1",
+    "pretty": "^2.0.0",
+    "smartquotes": "^2.3.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.0.0",
+    "@typescript-eslint/parser": "^3.0.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-prettier": "^3.1.3",
+    "prettier": "2.0.5"
+  }
+}
