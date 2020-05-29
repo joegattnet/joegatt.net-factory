@@ -11,7 +11,7 @@ const { clean } = require('./components/clean');
 
 const client = new Client({
     user: 'deployer',
-    host: '172.31.0.2',
+    host: '172.19.0.2',
     database: 'joegattnet',
     password: 'itTieni10',
     port: 5432,
@@ -23,7 +23,7 @@ const selectSql = `
   SELECT *
   FROM notes
   WHERE content_type = 0
-  ORDER BY groomed_at DESC
+  ORDER BY groomed_at
   LIMIT 1
 `;
 // WHERE content_type = 0 AND (groomed_at IS NULL OR groomed_at < updated_at) AND id = 164
@@ -68,7 +68,7 @@ const updateNote = note => {
           text = text.concat(`<${tagName}>`);
         }
         if (['em', 'strong'].includes(tagName)) {
-          text = text.concat(`<span className="${tagName}">`);
+          text = text.concat(`<span class="${tagName}">`);
         }
         if (tagName === 'br') {
           text = text.concat('\n');
@@ -103,41 +103,42 @@ const updateNote = note => {
   // ANNOTATIONS
   const annotationPattern = new RegExp(/\s*( *\[)([^\.].*? .*?)(\])/, 'gm');
   const nestedAnnotationPattern = new RegExp(/(\[[^\]]*)\[([^\]]*)\]([^\[]*\])/, 'gm');
-  const cleanOrphanedAnnotations = new RegExp(/<\/p><p><a href="#annotation/, 'gm');
-  const cleanTerminalAnnotations = new RegExp(/([\.\,\;\:])(<a href="#annotation)/, 'gm');
-  const cleanTerminalAnnotations2 = new RegExp(/<a (href="#annotation.*?a>)([\.\,\;\:])/, 'gm');
+  const cleanOrphanedAnnotations = new RegExp(/<\/p><p><a class="annotation-mark/, 'gm');
+  const cleanTerminalAnnotations = new RegExp(/([\.\,\;\:])(<a class="annotation-mark)/, 'gm');
+  const cleanTerminalAnnotations2 = new RegExp(/<a (class="annotation-mark.*?a>)([\.\,\;\:])/, 'gm');
   const trimTextOpen = new RegExp(/>\s*/, 'gm');
   const trimTextClose = new RegExp(/\s*</, 'gm');
   const trimDoubleSpace = new RegExp(/  +/, 'gm');
 
-  text = text.replace(nestedAnnotationPattern, '$1$3'); // Remove nested annotations
+  text = text.replace(nestedAnnotationPattern, '$1$3');
 
   let annotationsIndex = 0;
   let annotations = [];
   text = text.replace(annotationPattern, (match) => {
-      annotations[annotationsIndex] = match.match(/\[(.*?)\]/)[1];
-      const annotation = `<a href="#annotation-${ annotationsIndex + 1 }" ref={annotationMarks[${annotationsIndex}]} id="annotation-mark-${ annotationsIndex + 1 }">${ annotationsIndex + 1 }</a>`;
-      annotationsIndex = annotationsIndex + 1;
-      return annotation;
-    }
-  );
+    annotations[annotationsIndex] = match.match(/\[(.*?)\]/)[1];
+    annotationsIndex = annotationsIndex + 1;
+    return `<a class="annotation-mark">${annotationsIndex}</a>`;
+  }
+);
 
   console.log(chalk.black.bgYellow(annotations.join()));
 
-  text = text.replace(cleanOrphanedAnnotations, '<a href="#annotation');
-  text = text.replace(cleanTerminalAnnotations, '$1<a className="squash" href="#annotation');
-  text = text.replace(cleanTerminalAnnotations2, '$2<a className="squash" $1');
+  text = text.replace(cleanOrphanedAnnotations, '<a class="annotation-mark" href="#annotation');
+  text = text.replace(cleanTerminalAnnotations, '$1<a class="annotation-mark squash" href="#annotation');
+  text = text.replace(cleanTerminalAnnotations2, '$2<a class="annotation-mark squash" $1');
   text = text.replace(trimTextOpen, '>');
   text = text.replace(trimTextClose, '<');
   text = text.replace(trimDoubleSpace, ' ');
 
   text = text.replace(/<p>{quote:(.*?)}<\/p>/gm, '<blockquote>$1</blockquote>');
-  text = text.replace(/<p>\*\*\*\*\*\*<\/p>/gm, '</section><section>');
+  text = text.replace(/<p>[\*]+<\/p>/gm, '</section><section>');
   text = text.replace(/<p><\/p>\n?/gm, '');
   text = text.replace(/a>(\w)/gm, 'a> $1');
   text = text.replace(/\s* <\//gm, '</');
 
   text = pretty(text, {ocd: true});
+
+  text = text.replace(/classname/gm, 'class');
 
   console.log(chalk.red(text.replace(/\u00AD/g, '~')));
   Object.keys(note).sort().forEach(key => console.log(chalk.magenta(key)));
@@ -148,9 +149,10 @@ const updateNote = note => {
   const cachedBlurbHtml = `<h4>${clean(note.title)}</h4>`;
   const cachedHeadline = clean(splitTitle[0]);
   const cachedSubheadline = splitTitle[1] ? clean(splitTitle[1]) : null;
-  const cachedBodyHtml = `<section className="body">${text}</section>`;
+  const cachedBodyHtml = `<section class="body">${text}</section><section id="annotations"><header>Annotations</header><ol class="annotations-container">${annotations.map(annotation => `<li class="annotation">${annotation}</li>`).join('')}</ol></section>`;
 
-  runSql(updateSql, [
+  runSql(updateSql, 
+    [
       note.id,
       cachedUrl,
       cachedBlurbHtml,
