@@ -22,9 +22,9 @@ client.connect();
 const selectSql = `
   SELECT *
   FROM notes
-  WHERE content_type = 0 AND id = 483
+  WHERE content_type = 0
   ORDER BY groomed_at
-  LIMIT 1
+  LIMIT 1000
 `;
 // WHERE content_type = 0 AND (groomed_at IS NULL OR groomed_at < updated_at) AND id = 164
 
@@ -149,7 +149,7 @@ const updateText = note => {
   const cachedBlurbHtml = `<h4>${clean(note.title)}</h4>`;
   const cachedHeadline = clean(splitTitle[0]);
   const cachedSubheadline = splitTitle[1] ? clean(splitTitle[1]) : null;
-  const cachedBodyHtml = `<section class="body">${text}</section><section id="annotations"><header>Annotations</header><ol class="annotations-container">${annotations.map(annotation => `<li class="annotation">${annotation}</li>`).join('')}</ol></section>`;
+  const cachedBodyHtml = `<section class="body">${text}</section><section id="annotations"><header><h3>Annotations</h3></header><ol class="annotations-container">${annotations.map(annotation => `<li class="annotation">${annotation}</li>`).join('')}</ol></section>`;
 
   runSql(updateSql, 
     [
@@ -168,4 +168,4 @@ const updateText = note => {
   console.log(process.env.JOEGATTNET_PASSWORD);
 }
 
-runSql(selectSql).then(rows => rows.length ? updateText(rows[0]) : console.log(chalk.bold.red('Nothing found!')));
+runSql(selectSql).then(rows => rows.length ? rows.forEach(row => updateText(row)) : console.log(chalk.bold.red('Nothing found!')));
