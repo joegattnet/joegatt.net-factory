@@ -1,5 +1,5 @@
-const clean = require('./clean');
+const clean = require("./clean");
 
 export default (text) => {
   return text;
-}
+};

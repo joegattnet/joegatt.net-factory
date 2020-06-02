@@ -1,20 +1,20 @@
 // https://github.com/jkasun/sa-node-postgres
 // https://medium.com/@simon.white/postgres-publish-subscribe-with-nodejs-996a7e45f88
 
-const { Client } = require('pg');
-const chalk = require('chalk');
-const htmlparser2 = require('htmlparser2');
-const pretty = require('pretty');
+const { Client } = require("pg");
+const chalk = require("chalk");
+const htmlparser2 = require("htmlparser2");
+const pretty = require("pretty");
 
 // const bodify = require('./bodify');
-const { clean } = require('./components/clean');
+const { clean } = require("./components/clean");
 
 const client = new Client({
-    user: 'deployer',
-    host: '172.19.0.2',
-    database: 'joegattnet',
-    password: 'itTieni10',
-    port: 5432,
+  user: "deployer",
+  host: "172.19.0.2",
+  database: "joegattnet",
+  password: "itTieni10",
+  port: 5432,
 });
 
 client.connect();
@@ -47,42 +47,45 @@ const runSql = async (sql, values) => {
   }
 };
 
-const updateCitation = note => {
-  console.log('Updating ', chalk.black.bgYellow(note.title), '...');
+const updateCitation = (note) => {
+  console.log("Updating ", chalk.black.bgYellow(note.title), "...");
 
-  let text = '';
+  let text = "";
   const parser = new htmlparser2.Parser(
     {
       onopentag(tagName, attributes) {
-        console.log(chalk.black.bgCyan(tagName), chalk.magenta(JSON.stringify(attributes)));
+        console.log(
+          chalk.black.bgCyan(tagName),
+          chalk.magenta(JSON.stringify(attributes))
+        );
         // if (tagName === 'div') {
         //   text = text.concat(`<p>`);
         // }
-        if (tagName === 'a') {
+        if (tagName === "a") {
           text = text.concat(`<a href="${attributes.href}">`);
         }
-        if (['ol', 'ul', 'li', 'table', 'tr', 'td'].includes(tagName)) {
+        if (["ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
           text = text.concat(`<${tagName}>`);
         }
-        if (['em', 'strong'].includes(tagName)) {
+        if (["em", "strong"].includes(tagName)) {
           text = text.concat(`<span class="${tagName}">`);
         }
-        if (tagName === 'br') {
-          text = text.concat('\n');
+        if (tagName === "br") {
+          text = text.concat("\n");
         }
       },
       ontext(textFragment) {
-        if (textFragment.trim() === '') {
-          return text = text.concat(' ');
+        if (textFragment.trim() === "") {
+          return (text = text.concat(" "));
         }
         text = text.concat(clean(textFragment));
       },
       onclosetag(tagName) {
         console.log(chalk.blue(tagName));
-        if (['em', 'strong'].includes(tagName)) {
-          text = text.concat('</span>');
+        if (["em", "strong"].includes(tagName)) {
+          text = text.concat("</span>");
         }
-        if (['a', 'ol', 'ul', 'li', 'table', 'tr', 'td'].includes(tagName)) {
+        if (["a", "ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
           text = text.concat(`</${tagName}>`);
         }
       },
@@ -94,43 +97,47 @@ const updateCitation = note => {
   // parser.end();
 
   // SECTIONS & PARAGRAPHS
-  text = text.replace(/[\n]+/gm, '\n').split(/\n/).map(paragraph => `<p>${paragraph}</p>`).join('');
+  text = text
+    .replace(/[\n]+/gm, "\n")
+    .split(/\n/)
+    .map((paragraph) => `<p>${paragraph}</p>`)
+    .join("");
 
   // ANNOTATIONS
-  const trimTextOpen = new RegExp(/>\s*/, 'gm');
-  const trimTextClose = new RegExp(/\s*</, 'gm');
-  const trimDoubleSpace = new RegExp(/  +/, 'gm');
+  const trimTextOpen = new RegExp(/>\s*/, "gm");
+  const trimTextClose = new RegExp(/\s*</, "gm");
+  const trimDoubleSpace = new RegExp(/  +/, "gm");
 
-  text = text.replace(trimTextOpen, '>');
-  text = text.replace(trimTextClose, '<');
-  text = text.replace(trimDoubleSpace, ' ');
+  text = text.replace(trimTextOpen, ">");
+  text = text.replace(trimTextClose, "<");
+  text = text.replace(trimDoubleSpace, " ");
 
-  text = text.replace(/<p>{quote:(.*?)}<\/p>/gm, '<blockquote>$1</blockquote>');
-  text = text.replace(/a>(\w)/gm, 'a> $1');
-  text = text.replace(/\s* <\//gm, '</');
+  text = text.replace(/<p>{quote:(.*?)}<\/p>/gm, "<blockquote>$1</blockquote>");
+  text = text.replace(/a>(\w)/gm, "a> $1");
+  text = text.replace(/\s* <\//gm, "</");
 
-  text = pretty(text, {ocd: true});
+  text = pretty(text, { ocd: true });
 
-  text = text.replace(/classname/gm, 'class');
+  text = text.replace(/classname/gm, "class");
 
-  console.log(chalk.red(text.replace(/\u00AD/g, '~')));
+  console.log(chalk.red(text.replace(/\u00AD/g, "~")));
   // Object.keys(note).sort().forEach(key => console.log(chalk.magenta(key)));
   console.log(chalk.magenta(text));
 
   const cachedUrl = `/citations/${note.id}`;
-  const cachedBlurbHtml = 'xxx';
-  const cachedSourceHtml = 'yyy';
+  const cachedBlurbHtml = "xxx";
+  const cachedSourceHtml = "yyy";
 
-  runSql(updateSql, 
-    [
-      note.id,
-      cachedUrl,
-      cachedBlurbHtml,
-      cachedSourceHtml
-    ]
-  ).then(
-    console.log(`Updated note ${note.id}: ${note.title}`)
-  );
-}
+  runSql(updateSql, [
+    note.id,
+    cachedUrl,
+    cachedBlurbHtml,
+    cachedSourceHtml,
+  ]).then(console.log(`Updated note ${note.id}: ${note.title}`));
+};
 
-runSql(selectSql).then(rows => rows.length ? updateCitation(rows[0]) : console.log(chalk.bold.red('Nothing found!')));
+runSql(selectSql).then((rows) =>
+  rows.length
+    ? updateCitation(rows[0])
+    : console.log(chalk.bold.red("Nothing found!"))
+);
