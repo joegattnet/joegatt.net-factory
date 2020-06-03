@@ -1,14 +1,9 @@
-// https://github.com/jkasun/sa-node-postgres
-// https://medium.com/@simon.white/postgres-publish-subscribe-with-nodejs-996a7e45f88
-
 export {};
 
 const { Client } = require("pg");
 const chalk = require("chalk");
 const htmlparser2 = require("htmlparser2");
 const pretty = require("pretty");
-
-// const bodify = require('./bodify');
 const { clean } = require("./components/clean");
 
 const client = new Client({
@@ -28,7 +23,6 @@ const selectSql = `
   ORDER BY groomed_at
   LIMIT 999
 `;
-// WHERE content_type = 0 AND (groomed_at IS NULL OR groomed_at < updated_at) AND id = 164
 
 const updateSql = `
   UPDATE notes 
@@ -38,7 +32,6 @@ const updateSql = `
     groomed_at = NOW()
   WHERE id = $1
 `;
-// annotations_count
 
 const runSql = async (sql: string, values: Array<string>) => {
   try {
@@ -55,14 +48,11 @@ const updateCitation = (note: any): any => {
   let text = "";
   const parser = new htmlparser2.Parser(
     {
-      onopentag(tagName: string, attributes: any) {
+      onopentag(tagName: string, attributes: Attributes) {
         console.log(
           chalk.black.bgCyan(tagName),
           chalk.magenta(JSON.stringify(attributes))
         );
-        // if (tagName === 'div') {
-        //   text = text.concat(`<p>`);
-        // }
         if (tagName === "a") {
           text = text.concat(`<a href="${attributes.href}">`);
         }
