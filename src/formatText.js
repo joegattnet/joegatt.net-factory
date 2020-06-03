@@ -1,23 +1,16 @@
 // https://github.com/jkasun/sa-node-postgres
 // https://medium.com/@simon.white/postgres-publish-subscribe-with-nodejs-996a7e45f88
 
-const { Client } = require("pg");
 const chalk = require("chalk");
 const htmlparser2 = require("htmlparser2");
 const pretty = require("pretty");
 
 // const bodify = require('./bodify');
+const dbConnection = require("./components/dbConnection");
 const { clean } = require("./components/clean");
 
-const client = new Client({
-  user: "deployer",
-  host: "172.19.0.2",
-  database: "joegattnet",
-  password: "itTieni10",
-  port: 5432,
-});
-
-client.connect();
+console.group(dbConnection);
+dbConnection.connect();
 
 const selectSql = `
   SELECT *
