@@ -1,18 +1,15 @@
-// https://github.com/jkasun/sa-node-postgres
-// https://medium.com/@simon.white/postgres-publish-subscribe-with-nodejs-996a7e45f88
-
 export {};
 
 const chalk = require("chalk");
+const { Client } = require("pg");
 const htmlparser2 = require("htmlparser2");
 const pretty = require("pretty");
+const clean = require("./components/clean");
+const config = require("./config");
 
-// const bodify = require('./bodify');
-const dbConnection = require("./components/dbConnection");
-const { clean } = require("./components/clean");
+const client = new Client();
 
-console.group(dbConnection);
-dbConnection.connect();
+client.connect();
 
 const selectSql = `
   SELECT *
@@ -22,7 +19,7 @@ const selectSql = `
   LIMIT 999
 `;
 
-const updateSql = `
+const updateTextSql = `
   UPDATE notes 
   SET cached_url = $2,
     cached_blurb_html = $3,
@@ -34,7 +31,17 @@ const updateSql = `
   WHERE id = $1
 `;
 
-const runSql = async (sql: string, values: values) => {
+type updateTextValues = [
+  number,
+  string,
+  string,
+  string,
+  string,
+  string,
+  number
+];
+
+const runSql = async (sql: string, values?: updateTextValues) => {
   try {
     const results = await client.query(sql, values);
     return results.rows;
@@ -57,10 +64,10 @@ const updateText = (note: Note) => {
         if (tagName === "a") {
           text = text.concat(`<a href="${attributes.href}">`);
         }
-        if (["ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
+        if (config.ALLOWED_TAGS.includes(tagName)) {
           text = text.concat(`<${tagName}>`);
         }
-        if (["em", "strong"].includes(tagName)) {
+        if (config.SPANNED_TAGS.includes(tagName)) {
           text = text.concat(`<span class="${tagName}">`);
         }
         if (tagName === "br") {
@@ -75,7 +82,7 @@ const updateText = (note: Note) => {
       },
       onclosetag(tagName: string) {
         console.log(chalk.blue(tagName));
-        if (["em", "strong"].includes(tagName)) {
+        if (config.ALLOWED_TAGS.concat("a").includes(tagName)) {
           text = text.concat("</span>");
         }
         if (["a", "ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
@@ -132,7 +139,7 @@ const updateText = (note: Note) => {
   let annotationsIndex = 0;
   let annotations: Array<string> = [];
   text = text.replace(annotationPattern, (match: string) => {
-    annotations[annotationsIndex] = match.match(/\[(.*?)\]/)[1];
+    // annotations[annotationsIndex] = match.match(/\[(.*?)\]/)[1];
     annotationsIndex = annotationsIndex + 1;
     return `<a class="annotation-mark">${annotationsIndex}</a>`;
   });
@@ -176,11 +183,19 @@ const updateText = (note: Note) => {
   const cachedBlurbHtml = `<h4>${clean(note.title)}</h4>`;
   const cachedHeadline = clean(splitTitle[0]);
   const cachedSubheadline = splitTitle[1] ? clean(splitTitle[1]) : null;
-  const cachedBodyHtml = `<section class="body">${text}</section><section id="annotations"><header><h3>Annotations</h3></header><ol class="annotations-container">${annotations
-    .map((annotation) => `<li class="annotation">${annotation}</li>`)
-    .join("")}</ol></section>`;
+  const cachedBodyHtml = `
+    <section class="body">${text}</section>
+    <section id="annotations">
+      <header><h3>Annotations</h3></header>
+      <ol class="annotations-container">
+      ${annotations
+        .map((annotation) => `<li class="annotation">${annotation}</li>`)
+        .join("")}
+      </ol>
+    </section>
+  `;
 
-  runSql(updateSql, [
+  runSql(updateTextSql, [
     note.id,
     cachedUrl,
     cachedBlurbHtml,
@@ -193,7 +208,7 @@ const updateText = (note: Note) => {
   console.log(process.env.JOEGATTNET_PASSWORD);
 };
 
-runSql(selectSql, []).then((rows: Array<Note>) =>
+runSql(selectSql).then((rows: Array<Note>) =>
   rows.length
     ? rows.forEach((row) => updateText(row))
     : console.log(chalk.bold.red("Nothing found!"))

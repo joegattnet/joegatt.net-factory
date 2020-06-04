@@ -1,19 +1,13 @@
 export {};
 
-const { Client } = require("pg");
 const chalk = require("chalk");
+const { Client } = require("pg");
 const htmlparser2 = require("htmlparser2");
 const pretty = require("pretty");
-const { clean } = require("./components/clean");
+const clean = require("./components/clean");
+const config = require("./config");
 
-const client = new Client({
-  user: "deployer",
-  host: "172.19.0.2",
-  database: "joegattnet",
-  password: "itTieni10",
-  port: 5432,
-});
-
+const client = new Client(config.DB_CONNECTION);
 client.connect();
 
 const selectSql = `
@@ -24,16 +18,19 @@ const selectSql = `
   LIMIT 999
 `;
 
-const updateSql = `
+const updateCitationSql = `
   UPDATE notes 
   SET cached_url = $2,
     cached_blurb_html = $3,
     cached_source_html = $4,
+    cached_body_html = $5,
     groomed_at = NOW()
   WHERE id = $1
 `;
 
-const runSql = async (sql: string, values: Array<string>) => {
+type updateCitationValues = [number, string, string, string, string];
+
+const runSql = async (sql: string, values?: updateCitationValues) => {
   try {
     const results = await client.query(sql, values);
     return results.rows;
@@ -42,24 +39,23 @@ const runSql = async (sql: string, values: Array<string>) => {
   }
 };
 
-const updateCitation = (note: any): any => {
-  console.log("Updating ", chalk.black.bgYellow(note.title), "...");
-
+const updateCitation = (note: Note): any => {
+  console.log(
+    chalk.blue(
+      `Updating "${note.title} | ${note.source_url} | ${note.cached_url} | ${note.cached_source_html}" ...`
+    )
+  );
   let text = "";
   const parser = new htmlparser2.Parser(
     {
       onopentag(tagName: string, attributes: Attributes) {
-        console.log(
-          chalk.black.bgCyan(tagName),
-          chalk.magenta(JSON.stringify(attributes))
-        );
         if (tagName === "a") {
           text = text.concat(`<a href="${attributes.href}">`);
         }
-        if (["ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
+        if (config.ALLOWED_TAGS.includes(tagName)) {
           text = text.concat(`<${tagName}>`);
         }
-        if (["em", "strong"].includes(tagName)) {
+        if (config.SPANNED_TAGS.includes(tagName)) {
           text = text.concat(`<span class="${tagName}">`);
         }
         if (tagName === "br") {
@@ -74,19 +70,16 @@ const updateCitation = (note: any): any => {
       },
       onclosetag(tagName: string) {
         console.log(chalk.blue(tagName));
-        if (["em", "strong"].includes(tagName)) {
+        if (config.SPANNED_TAGS.includes(tagName)) {
           text = text.concat("</span>");
         }
-        if (["a", "ol", "ul", "li", "table", "tr", "td"].includes(tagName)) {
+        if (config.ALLOWED_TAGS.concat("a").includes(tagName)) {
           text = text.concat(`</${tagName}>`);
         }
       },
     },
     { decodeEntities: true }
   );
-
-  // parser.write(note.body.slice(0, note.body.indexOf('--30--')));
-  // parser.end();
 
   // SECTIONS & PARAGRAPHS
   text = text
@@ -95,7 +88,7 @@ const updateCitation = (note: any): any => {
     .map((paragraph) => `<p>${paragraph}</p>`)
     .join("");
 
-  // ANNOTATIONS
+  // SPACES
   const trimTextOpen = new RegExp(/>\s*/, "gm");
   const trimTextClose = new RegExp(/\s*</, "gm");
   const trimDoubleSpace = new RegExp(/  +/, "gm");
@@ -112,26 +105,34 @@ const updateCitation = (note: any): any => {
 
   text = text.replace(/classname/gm, "class");
 
-  console.log(chalk.red(text.replace(/\u00AD/g, "~")));
-  // Object.keys(note).sort().forEach(key => console.log(chalk.magenta(key)));
-  console.log(chalk.magenta(text));
+  // console.log(chalk.red(text.replace(/\u00AD/g, "~")));
+  // console.log(chalk.magenta(text));
 
   const cachedUrl = `/citations/${note.id}`;
-  const cachedBlurbHtml = "xxx";
+  const cachedBlurbHtml = note.title;
   const cachedSourceHtml = "yyy";
+  const cachedBodyHtml = `
+    <figure class="citation">
+      <blockquote>${text}</blockquote>
+      <figcaption>badidda</figcaption>
+    </figure>
+  `;
 
-  runSql(updateSql, [
+  runSql(updateCitationSql, [
     note.id,
     cachedUrl,
     cachedBlurbHtml,
     cachedSourceHtml,
+    cachedBodyHtml,
   ]).then(() => console.log(`Updated note ${note.id}: ${note.title}`));
 };
 
-runSql(selectSql, []).then((rows: Array<Note>) =>
-  rows.length
-    ? rows.forEach((row: object) => void updateCitation(row))
-    : console.log(chalk.bold.red("Nothing found!"))
-);
-
-process.exit();
+runSql(selectSql)
+  .then((rows: Array<Note>) => {
+    if (rows.length) {
+      rows.forEach((row) => updateCitation(row));
+      return console.log(chalk.bold.green(`${rows.length} citations updated!`));
+    }
+    return console.log(chalk.bold.red("Nothing found!"));
+  })
+  .then(() => process.exit());
