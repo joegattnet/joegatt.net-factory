@@ -2,7 +2,6 @@
   "name": "joegatt.net-gardener",
   "version": "1.0.0",
   "description": "Various services to groom notes",
-  "main": "index.js",
   "scripts": {
     "lint": "eslint .",
     "prepush": "npm run lint && npm test",
@@ -17,8 +16,13 @@
   "dependencies": {
     "chalk": "^4.0.0",
     "htmlparser2": "^4.1.0",
+    "hyphen": "^1.6.2",
     "hyphenated": "^1.2.0",
+    "hyphenated-de": "^1.2.0",
     "hyphenated-en-gb": "^1.2.0",
+    "hyphenated-fr": "^1.2.0",
+    "languagedetect": "^2.0.0",
+    "lodash": "^4.17.15",
     "pg": "^8.2.1",
     "pretty": "^2.0.0",
     "smartquotes": "^2.3.1"

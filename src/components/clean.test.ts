@@ -10,12 +10,6 @@ test("Changes multipe -- to m-dashes", () => {
   );
 });
 
-test("Reduces multiple spaces to one", () => {
-  expect(clean("<p>This   space is now one.</p>")).toBe(
-    "<p>This space is now one.</p>"
-  );
-});
-
 test("Change non-breaking spaces to normal spaces", () => {
   expect(clean("<p>This&nbsp;space is now one.</p>")).toBe(
     "<p>This space is now one.</p>"

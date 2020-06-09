@@ -7,8 +7,7 @@ const pretty = require("pretty");
 const clean = require("./components/clean");
 const config = require("./config");
 
-const client = new Client();
-
+const client = new Client(config.DB_CONNECTION);
 client.connect();
 
 const selectSql = `
@@ -204,12 +203,28 @@ const updateText = (note: Note) => {
     cachedBodyHtml,
     annotations.length,
   ]).then(() => console.log(`Updated note ${note.id}: ${note.title}`));
-
-  console.log(process.env.JOEGATTNET_PASSWORD);
 };
 
-runSql(selectSql).then((rows: Array<Note>) =>
-  rows.length
-    ? rows.forEach((row) => updateText(row))
-    : console.log(chalk.bold.red("Nothing found!"))
-);
+runSql(selectSql)
+  .then((rows: Array<Note>) =>
+    rows.length
+      ? rows.forEach(updateText)
+      : console.log(chalk.bold.red("Nothing found!"))
+  )
+  .then(() => {
+    client.end();
+    process.exit();
+  });
+
+// runSql(selectSql)
+//   .then((rows: Array<Note>) => {
+//     if (rows.length) {
+//       rows.forEach(updateText);
+//       return console.log(chalk.bold.green(`${rows.length} texts updated!`));
+//     }
+//     return console.log(chalk.bold.red("Nothing found!"));
+//   })
+//   .then(() => {
+//     client.end();
+//     process.exit();
+//   });
