@@ -1,4 +1,4 @@
-const clean = require("./clean");
+const clean = require("../clean");
 
 test("Changes -- to m-dash", () => {
   expect(clean("<p>This--is an m-dash.</p>")).toBe("<p>This—is an m-dash.</p>");

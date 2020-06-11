@@ -25,6 +25,7 @@
     "lodash": "^4.17.15",
     "pg": "^8.2.1",
     "pretty": "^2.0.0",
+    "sanitize-html": "^1.26.0",
     "smartquotes": "^2.3.1"
   },
   "devDependencies": {

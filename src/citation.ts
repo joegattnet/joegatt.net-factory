@@ -2,8 +2,10 @@ export {};
 
 const chalk = require("chalk");
 const { Client } = require("pg");
+const sanitize = require("sanitize-html");
 const parse = require("./components/parse");
 const tidyHtml = require("./components/tidyHtml");
+const byline = require("./components/byline");
 const config = require("./config");
 
 const client = new Client(config.DB_CONNECTION);
@@ -26,39 +28,65 @@ const updateCitationSql = `
   WHERE id = $1
 `;
 
-type updateCitationValues = [number, string, string, string];
-
 const formatCitation = (note: Note): updateCitationValues => {
   // discard extra
-  let text = note.body.slice(0, note.body.indexOf("--30--"));
+  // let text = note.body.slice(0, note.body.indexOf("--30--"));
+  let text = note.body;
 
   // parse
   text = parse(text);
 
   // dequote
-  text = text.replace(/\{quote:\s*(.*?)\}?/gm, "$1");
-
-  // Tidy Html
-  text = tidyHtml(text);
+  text = text.replace(/{quote:(.*?)}/gm, "$1");
 
   // Split
-  const [citationText, source] = text.split(/\n--\s*|—/);
+  let [citationText, attribution] = text.split(/\n--\s*|\n—\s*/);
 
-  const cachedUrl = `/citations/${note.id}`;
-  const cachedBlurbHtml = `
+  attribution = sanitize(attribution, {
+    allowedTags: [],
+    allowedAttributes: {},
+  }).trim();
+
+  const blurbText = sanitize(citationText, {
+    allowedTags: [],
+    allowedAttributes: {},
+  }).trim();
+
+  // fix link
+  let blurbAttribution =
+    attribution &&
+    attribution.replace(/(https?:\/\/)(www\.)?([^\/]+)+(\/.*)?\b/gm, "$3");
+
+  // bylines
+  blurbAttribution = byline(blurbAttribution);
+
+  const bodyAttribution =
+    attribution &&
+    attribution.replace(
+      /(https?:\/\/)(.+?\.[a-z]{2,})\b(.*?)\b/gm,
+      '<a href="$1$2$3">$2</a>'
+    );
+
+  const path = `/citations/${note.id}`;
+  const blurb = tidyHtml(`
+    <figure class="citation">
+      <blockquote>${blurbText}</blockquote>
+      <figcaption>${blurbAttribution}</figcaption>
+    </figure>
+  `);
+  const body = tidyHtml(`
     <figure class="citation">
       <blockquote>${citationText}</blockquote>
-      <figcaption>${source}</figcaption>
+      <figcaption>${bodyAttribution}</figcaption>
     </figure>
-  `;
-  const cachedBodyHtml = `
-    <figure class="citation">
-      <blockquote>${citationText}</blockquote>
-      <figcaption>${source}</figcaption>
-    </figure>
-  `;
+  `);
 
-  return [note.id, cachedUrl, cachedBlurbHtml, cachedBodyHtml];
+  return {
+    id: note.id,
+    path: path,
+    blurb: blurb.trim(),
+    body: body.trim(),
+  };
 };
 
 const fetchCitations = async () => {
@@ -68,7 +96,12 @@ const fetchCitations = async () => {
 
 const updateCitation = async (values: updateCitationValues) => {
   console.group(values);
-  const result = await client.query(updateCitationSql, values);
+  const result = await client.query(updateCitationSql, [
+    values.id,
+    values.path,
+    values.blurb,
+    values.body,
+  ]);
   return result;
 };
 
@@ -91,4 +124,6 @@ const updateAllCitations = async () => {
   process.exit();
 };
 
-updateAllCitations();
+// updateAllCitations();
+
+module.exports = { formatCitation, updateAllCitations };

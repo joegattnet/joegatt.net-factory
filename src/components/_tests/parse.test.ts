@@ -1,4 +1,4 @@
-const parse = require("./parse");
+const parse = require("../parse");
 
 // test("Divs become paragraphs..", () => {
 //   expect(parse("<div>Divs become paragraphs.</div>")).toBe(

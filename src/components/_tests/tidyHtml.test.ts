@@ -1,4 +1,6 @@
-const tidyHtml = require("./tidyHtml");
+export = {};
+
+const tidyHtml = require("../tidyHtml");
 
 test("Trims leading space inside tags.", () => {
   expect(tidyHtml("<p> Trims leading space inside tags.</p>")).toBe(
