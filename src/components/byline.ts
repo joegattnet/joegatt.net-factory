@@ -12,20 +12,20 @@ module.exports = (textString: string) => {
       replaceString: "$2$3",
     },
     {
-      // LRB 1
+      // LRB 1: “LRB · Malcolm Bull · Great Again: Heidegger” at http://www.lrb.co.uk/etc
       findRegExp: new RegExp(
-        /("|“)LRB · (.*?) · (.*?)("|”).*( at lrb\.co\.uk).*/,
+        /("|“)LRB · (.*?) · (.*?)("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
         "gm"
       ),
-      replaceString: "$2: $1$3$4$5",
+      replaceString: "$2: $1$3$4$5$6",
     },
     {
-      // LRB 2
+      // LRB 2:
       findRegExp: new RegExp(
-        /("|“)(.*?) · (.*?) · LRB.*?("|”).*( at lrb\.co\.uk).*/,
+        /("|“)(.*?) · (.*?) · LRB.*?("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
         "gm"
       ),
-      replaceString: "$2: $1$3$4$5",
+      replaceString: "$2: $1$3$4$5$6",
     },
   ];
   return trims.reduce(

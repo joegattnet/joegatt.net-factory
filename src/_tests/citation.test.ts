@@ -5,15 +5,16 @@ const tidyHtml = require("../components/tidyHtml");
 
 const input = {
   id: 1,
-  body: "This is a <strong>quote</strong>.\n-- Bob at example.com",
+  body:
+    "This is a <strong>quote</strong>.\n-- “LRB · Malcolm Bull · Great Again: America’s Heidegger” at https://lrb.co.uk/patty",
 };
 const expectedBlurb = tidyHtml(`<figure class="citation">
   <blockquote>This is a quote.</blockquote>
-  <figcaption>Bob at example.com</figcaption>
+  <figcaption>Malcolm Bull: “Great Again: America’s Heidegger” at lrb.co.uk</figcaption>
 </figure>`);
 const expectedBody = tidyHtml(`<figure class="citation">
   <blockquote>This is a <span className="strong">quote</span>.</blockquote>
-  <figcaption>Bob at example.com</figcaption>
+  <figcaption>Malcolm Bull: “Great Again: America’s Heidegger” at <a href="https://lrb.co.uk/patty">lrb.co.uk</a></figcaption>
 </figure>`);
 
 const output = formatCitation(input);

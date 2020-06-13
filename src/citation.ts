@@ -1,12 +1,18 @@
 export {};
 
-const chalk = require("chalk");
-const { Client } = require("pg");
-const sanitize = require("sanitize-html");
-const parse = require("./components/parse");
-const tidyHtml = require("./components/tidyHtml");
 const byline = require("./components/byline");
+const chalk = require("chalk");
 const config = require("./config");
+const delink = require("./components/delink");
+const dequote = require("./components/dequote");
+const link = require("./components/link");
+const flow = require("lodash/fp/flow");
+const parse = require("./components/parse");
+const sanitise = require("./components/sanitise");
+const splitCitation = require("./components/splitCitation");
+const thirty = require("./components/thirty");
+const tidyHtml = require("./components/tidyHtml");
+const { Client } = require("pg");
 
 const client = new Client(config.DB_CONNECTION);
 client.connect();
@@ -16,7 +22,7 @@ const selectCitationsSql = `
   FROM notes
   WHERE content_type = 1
   ORDER BY groomed_at
-  LIMIT 9999
+  LIMIT 19999
 `;
 
 const updateCitationSql = `
@@ -29,43 +35,12 @@ const updateCitationSql = `
 `;
 
 const formatCitation = (note: Note): updateCitationValues => {
-  // discard extra
-  // let text = note.body.slice(0, note.body.indexOf("--30--"));
-  let text = note.body;
-
-  // parse
-  text = parse(text);
-
-  // dequote
-  text = text.replace(/{quote:(.*?)}/gm, "$1");
-
-  // Split
-  let [citationText, attribution] = text.split(/\n--\s*|\n—\s*/);
-
-  attribution = sanitize(attribution, {
-    allowedTags: [],
-    allowedAttributes: {},
-  }).trim();
-
-  const blurbText = sanitize(citationText, {
-    allowedTags: [],
-    allowedAttributes: {},
-  }).trim();
-
-  // fix link
-  let blurbAttribution =
-    attribution &&
-    attribution.replace(/(https?:\/\/)(www\.)?([^\/]+)+(\/.*)?\b/gm, "$3");
-
-  // bylines
-  blurbAttribution = byline(blurbAttribution);
-
-  const bodyAttribution =
-    attribution &&
-    attribution.replace(
-      /(https?:\/\/)(.+?\.[a-z]{2,})\b(.*?)\b/gm,
-      '<a href="$1$2$3">$2</a>'
-    );
+  let text = flow(thirty, dequote, parse)(note.body);
+  let { citationText, attribution } = splitCitation(text);
+  attribution = byline(attribution);
+  const blurbText = sanitise(citationText);
+  const blurbAttribution = delink(attribution);
+  const bodyAttribution = link(attribution);
 
   const path = `/citations/${note.id}`;
   const blurb = tidyHtml(`
@@ -95,7 +70,6 @@ const fetchCitations = async () => {
 };
 
 const updateCitation = async (values: updateCitationValues) => {
-  console.group(values);
   const result = await client.query(updateCitationSql, [
     values.id,
     values.path,
@@ -124,6 +98,6 @@ const updateAllCitations = async () => {
   process.exit();
 };
 
-// updateAllCitations();
+updateAllCitations();
 
 module.exports = { formatCitation, updateAllCitations };

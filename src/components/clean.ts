@@ -17,7 +17,7 @@ const smartHyphens = (textString: string) => {
       replaceString: "–",
     },
     {
-      // Remove non- breaking spaces
+      // Remove non-breaking spaces
       findRegExp: new RegExp(/&nbsp;/, "gm"),
       replaceString: " ",
     },
