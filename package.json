@@ -14,6 +14,8 @@
   "author": "Joe Gatt",
   "license": "ISC",
   "dependencies": {
+    "@types/htmlparser2": "^3.10.1",
+    "@types/sanitize-html": "^1.23.2",
     "chalk": "^4.0.0",
     "htmlparser2": "^4.1.0",
     "hyphen": "^1.6.2",
@@ -26,7 +28,8 @@
     "pg": "^8.2.1",
     "pretty": "^2.0.0",
     "sanitize-html": "^1.26.0",
-    "smartquotes": "^2.3.1"
+    "smartquotes": "^2.3.1",
+    "truncate-html": "^1.0.3"
   },
   "devDependencies": {
     "@types/jest": "^25.2.3",

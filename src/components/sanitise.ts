@@ -2,9 +2,14 @@ export {};
 
 const sanitize = require("sanitize-html");
 
-module.exports = (textString: string) => {
-  return sanitize(textString, {
-    allowedTags: [],
-    allowedAttributes: {},
+module.exports = (
+  textString: string,
+  allowedTags: Array<string> = [],
+  allowedAttributes: any = {},
+  allowedClasses: any = {}
+) =>
+  sanitize(textString, {
+    allowedTags,
+    allowedAttributes,
+    allowedClasses,
   }).trim();
-};

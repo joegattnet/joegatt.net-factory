@@ -22,6 +22,17 @@ test("Removes nested tags and attributes", () => {
 
 test("Removes nested tags and attributes when new lines are present", () => {
   expect(
-    sanitise('<p>Some\n <span className="strong">strong</span> content.</p>')
+    sanitise('<p>Some\n <span class="strong">strong</span> content.</p>')
   ).toBe("Some\n strong content.");
+});
+
+test("Keeps tags and attributes if instructed to", () => {
+  expect(
+    sanitise(
+      '<p>Some\n <span class="strong">strong</span> content.</p>',
+      ["span"],
+      { span: ["class"] },
+      { span: ["em", "strong"] }
+    )
+  ).toBe('Some\n <span class="strong">strong</span> content.');
 });

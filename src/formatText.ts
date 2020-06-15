@@ -169,7 +169,7 @@ const updateText = (note: Note) => {
 
   text = pretty(text, { ocd: true });
 
-  text = text.replace(/classname/gm, "class");
+  text = text.replace(/classname/gim, "class");
 
   console.log(chalk.red(text.replace(/\u00AD/g, "~")));
   Object.keys(note)

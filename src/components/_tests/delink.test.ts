@@ -11,3 +11,13 @@ test("Changes very long urls to domains", () => {
     )
   ).toBe("at slate.com");
 });
+
+test("Only modifies the url", () => {
+  expect(
+    delink(
+      "“The Fass and the furious: the remarkable career of Rainer Werner Fassbinder” at http://www.theguardian.com/film/2017/apr/24/rainer-werner-fassbinder-bfi-merchant-four-seasons"
+    )
+  ).toBe(
+    "“The Fass and the furious: the remarkable career of Rainer Werner Fassbinder” at theguardian.com"
+  );
+});

@@ -11,6 +11,7 @@ const parse = require("./components/parse");
 const sanitise = require("./components/sanitise");
 const splitCitation = require("./components/splitCitation");
 const thirty = require("./components/thirty");
+const truncate = require("./components/truncate");
 const tidyHtml = require("./components/tidyHtml");
 const { Client } = require("pg");
 
@@ -22,7 +23,7 @@ const selectCitationsSql = `
   FROM notes
   WHERE content_type = 1
   ORDER BY groomed_at
-  LIMIT 19999
+  LIMIT 999
 `;
 
 const updateCitationSql = `
@@ -38,8 +39,10 @@ const formatCitation = (note: Note): updateCitationValues => {
   let text = flow(thirty, dequote, parse)(note.body);
   let { citationText, attribution } = splitCitation(text);
   attribution = byline(attribution);
-  const blurbText = sanitise(citationText);
+
+  const blurbText = flow(truncate, sanitise)(citationText);
   const blurbAttribution = delink(attribution);
+  const bodyText = sanitise(citationText, ["span"], ["className"]);
   const bodyAttribution = link(attribution);
 
   const path = `/citations/${note.id}`;
@@ -51,7 +54,7 @@ const formatCitation = (note: Note): updateCitationValues => {
   `);
   const body = tidyHtml(`
     <figure class="citation">
-      <blockquote>${citationText}</blockquote>
+      <blockquote>${bodyText}</blockquote>
       <figcaption>${bodyAttribution}</figcaption>
     </figure>
   `);
