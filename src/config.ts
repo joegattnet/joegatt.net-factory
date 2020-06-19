@@ -1,6 +1,6 @@
 module.exports = {
   ALLOWED_TAGS: ["ol", "ul", "li", "table", "tr", "td"],
-  BLURB_LENGTH: 10,
+  BLURB_LENGTH: 50,
   DB_CONNECTION: {
     user: "deployer",
     host: "172.19.0.3",

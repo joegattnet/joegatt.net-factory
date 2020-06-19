@@ -16,8 +16,8 @@ test("Trims trailing space inside tags.", () => {
 
 test("Trims leading space inside tags with attributes.", () => {
   expect(
-    tidyHtml('<p class="test"> Trims leading space inside tags.</p>')
-  ).toBe('<p class="test">Trims leading space inside tags.</p>');
+    tidyHtml('<p className="test"> Trims leading space inside tags.</p>')
+  ).toBe('<p className="test">Trims leading space inside tags.</p>');
 });
 
 test("Does not trim spaces outside links.", () => {
@@ -55,7 +55,9 @@ test("Trims spaces inside spans.", () => {
 test("Trims all superfluous space.", () => {
   expect(
     tidyHtml(
-      '<p class="test">  Trims leading space <span>inside</span> tags.   </p>'
+      '<p className="test">  Trims leading space <span>inside</span> tags.   </p>'
     )
-  ).toBe('<p class="test">Trims leading space <span>inside</span> tags.</p>');
+  ).toBe(
+    '<p className="test">Trims leading space <span>inside</span> tags.</p>'
+  );
 });

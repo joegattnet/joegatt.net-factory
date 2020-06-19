@@ -9,14 +9,14 @@ test("Removes inline tags", () => {
 });
 
 test("Removes inline tags and attributes", () => {
-  expect(sanitise('Some <span className="strong">strong</span> content.')).toBe(
+  expect(sanitise('Some <span class="strong">strong</span> content.')).toBe(
     "Some strong content."
   );
 });
 
 test("Removes nested tags and attributes", () => {
   expect(
-    sanitise('<p>Some <span className="strong">strong</span> content.</p>')
+    sanitise('<p>Some <span class="strong">strong</span> content.</p>')
   ).toBe("Some strong content.");
 });
 
@@ -34,5 +34,5 @@ test("Keeps tags and attributes if instructed to", () => {
       { span: ["class"] },
       { span: ["em", "strong"] }
     )
-  ).toBe('Some\n <span class="strong">strong</span> content.');
+  ).toBe('Some\n <span className="strong">strong</span> content.');
 });

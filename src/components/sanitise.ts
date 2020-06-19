@@ -8,8 +8,10 @@ module.exports = (
   allowedAttributes: any = {},
   allowedClasses: any = {}
 ) =>
-  sanitize(textString, {
+  sanitize(textString.replace(/className/gim, "class"), {
     allowedTags,
     allowedAttributes,
     allowedClasses,
-  }).trim();
+  })
+    .replace(/class/gim, "className")
+    .trim();

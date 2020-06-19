@@ -1,19 +1,20 @@
 export {};
 
-const byline = require("./components/byline");
 const chalk = require("chalk");
-const config = require("./config");
-const delink = require("./components/delink");
-const dequote = require("./components/dequote");
-const link = require("./components/link");
 const flow = require("lodash/fp/flow");
-const parse = require("./components/parse");
-const sanitise = require("./components/sanitise");
-const splitCitation = require("./components/splitCitation");
-const thirty = require("./components/thirty");
-const truncate = require("./components/truncate");
-const tidyHtml = require("./components/tidyHtml");
 const { Client } = require("pg");
+
+const byline = require("../components/byline");
+const config = require("../config");
+const delink = require("../components/delink");
+const dequote = require("../components/dequote");
+const link = require("../components/link");
+const parse = require("../components/parse");
+const sanitise = require("../components/sanitise");
+const splitCitation = require("../components/splitCitation");
+const thirty = require("../components/thirty");
+const truncate = require("../components/truncate");
+const tidyHtml = require("../components/tidyHtml");
 
 const client = new Client(config.DB_CONNECTION);
 client.connect();
@@ -42,7 +43,12 @@ const formatCitation = (note: Note): updateCitationValues => {
 
   const blurbText = flow(truncate, sanitise)(citationText);
   const blurbAttribution = delink(attribution);
-  const bodyText = sanitise(citationText, ["span"], ["className"]);
+  const bodyText = sanitise(
+    citationText,
+    ["span"],
+    { span: ["class"] },
+    { span: ["em", "strong"] }
+  );
   const bodyAttribution = link(attribution);
 
   const path = `/citations/${note.id}`;
@@ -100,7 +106,5 @@ const updateAllCitations = async () => {
   client.end();
   process.exit();
 };
-
-updateAllCitations();
 
 module.exports = { formatCitation, updateAllCitations };

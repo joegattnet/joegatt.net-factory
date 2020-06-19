@@ -1,7 +1,7 @@
 export {};
 
-const { formatCitation } = require("../citation");
-const tidyHtml = require("../components/tidyHtml");
+const { formatCitation } = require("../citations");
+const tidyHtml = require("../../components/tidyHtml");
 
 const input = {
   id: 1,
