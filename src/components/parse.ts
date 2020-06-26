@@ -4,18 +4,29 @@ const htmlparser2 = require("htmlparser2");
 const clean = require("./clean");
 const config = require("./../config");
 
-module.exports = (unformattedText: string, hyphenate: boolean) => {
+// REVIEW: This can't be the best way to do the defaults!
+module.exports = (
+  unformattedText: string,
+  {
+    allowedTags = config.ALLOWED_TAGS_BODY,
+    hyphenate = false,
+    spannedTags = config.SPANNED_TAGS,
+  }: ParseOptions = {
+    allowedTags: config.ALLOWED_TAGS_BODY,
+    hyphenate: false,
+    spannedTags: config.SPANNED_TAGS,
+  }
+) => {
   let text = "";
   const parser = new htmlparser2.Parser(
     {
       onopentag(tagName: string, attributes: Attributes) {
-        if (tagName === "a") {
-          text = text.concat(`<a href="${attributes.href}">`);
+        if (allowedTags.includes(tagName)) {
+          text = text.concat(
+            tagName === "a" ? `<a href="${attributes.href}">` : `<${tagName}>`
+          );
         }
-        if (config.ALLOWED_TAGS.includes(tagName)) {
-          text = text.concat(`<${tagName}>`);
-        }
-        if (config.SPANNED_TAGS.includes(tagName)) {
+        if (spannedTags.includes(tagName)) {
           text = text.concat(`<span className="${tagName}">`);
         }
         if (tagName === "br") {
@@ -29,10 +40,10 @@ module.exports = (unformattedText: string, hyphenate: boolean) => {
         text = text.concat(clean(textFragment, hyphenate));
       },
       onclosetag(tagName: string) {
-        if (config.SPANNED_TAGS.includes(tagName)) {
+        if (spannedTags.includes(tagName)) {
           text = text.concat("</span>");
         }
-        if (config.ALLOWED_TAGS.concat("a").includes(tagName)) {
+        if (allowedTags.includes(tagName)) {
           text = text.concat(`</${tagName}>`);
         }
       },

@@ -4,8 +4,11 @@ module.exports = (textString: string) => {
   const trims = [
     {
       // Replace link text with domain
-      findRegExp: new RegExp(/(https?:\/\/)(www\.)?([^\/]+)+(\/.*)?\b/, "gm"),
-      replaceString: '<a href="$1$2$3$4">$3</a>',
+      findRegExp: new RegExp(
+        /(^")(\"https?:\/\/)(www\.)?([^\/]+)+(.*)?\b/,
+        "gim"
+      ),
+      replaceString: "$1<a href=$2$3$4$5>$4</a>",
     },
   ];
   return trims.reduce(

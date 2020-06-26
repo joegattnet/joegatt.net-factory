@@ -14,7 +14,7 @@ module.exports = (textString: string) => {
     {
       // LRB 1: “LRB · Malcolm Bull · Great Again: Heidegger” at http://www.lrb.co.uk/etc
       findRegExp: new RegExp(
-        /("|“)LRB · (.*?) · (.*?)("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
+        /(["“])LRB · (.*?) · (.*?)("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
         "gm"
       ),
       replaceString: "$2: $1$3$4$5$6",
@@ -22,7 +22,7 @@ module.exports = (textString: string) => {
     {
       // LRB 2:
       findRegExp: new RegExp(
-        /("|“)(.*?) · (.*?) · LRB.*?("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
+        /(["“])(.*?) · (.*?) · LRB.*?("|”).*( at )(https?:\/\/lrb\.co\.uk[a-z\/]*)/,
         "gm"
       ),
       replaceString: "$2: $1$3$4$5$6",

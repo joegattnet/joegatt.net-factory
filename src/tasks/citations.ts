@@ -36,19 +36,13 @@ const updateCitationSql = `
   WHERE id = $1
 `;
 
-const formatCitation = (note: Note): updateCitationValues => {
-  let text = flow(thirty, dequote, parse)(note.body);
+const formatCitation = (note: Note): UpdateCitationValues => {
+  let text = flow(thirty, dequote, byline)(note.body);
   let { citationText, attribution } = splitCitation(text);
-  attribution = byline(attribution);
 
   const blurbText = flow(truncate, sanitise)(citationText);
   const blurbAttribution = delink(attribution);
-  const bodyText = sanitise(
-    citationText,
-    ["span"],
-    { span: ["class"] },
-    { span: ["em", "strong"] }
-  );
+  const bodyText = parse(citationText);
   const bodyAttribution = link(attribution);
 
   const path = `/citations/${note.id}`;
@@ -78,7 +72,7 @@ const fetchCitations = async () => {
   return results.rows;
 };
 
-const updateCitation = async (values: updateCitationValues) => {
+const updateCitation = async (values: UpdateCitationValues) => {
   const result = await client.query(updateCitationSql, [
     values.id,
     values.path,

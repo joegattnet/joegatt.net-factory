@@ -3,8 +3,8 @@ export {};
 module.exports = (textString: string) => {
   const trims = [
     {
-      // Remove everything after -30-
-      findRegExp: new RegExp(/{quote:(.*?)}/, "gm"),
+      // Remove {quote: scaffold}
+      findRegExp: new RegExp(/^\s*\{quote:\s*(.*?)\s*\}\s*$/, "gims"),
       replaceString: "$1",
     },
   ];

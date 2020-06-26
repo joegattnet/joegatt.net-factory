@@ -6,7 +6,7 @@ const tidyHtml = require("../../components/tidyHtml");
 const input = {
   id: 1,
   body:
-    "This is a <strong>quote</strong>.\n-- “LRB · Malcolm Bull · Great Again: America’s Heidegger” at https://lrb.co.uk/patty",
+    '{quote: This is a <strong>quote</strong>.\n-- “LRB · Malcolm Bull · Great Again: America’s Heidegger” at <a href="https://lrb.co.uk/patty">https://lrb.co.uk/patty</a> }',
 };
 const expectedBlurb = tidyHtml(`<figure class="citation">
   <blockquote>This is a quote.</blockquote>
