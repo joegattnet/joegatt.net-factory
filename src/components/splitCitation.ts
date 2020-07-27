@@ -1,7 +1,7 @@
 export {};
 
 module.exports = (textString: string) => {
-  const split = textString.match(/^(.*)\n*?(--|—)(.*?)$/m);
+  const split = textString.match(/^(.*)\n*?\s*(--|—)\s*(.*?)$/m);
   if (!split) {
     return { citationText: textString, attribution: "Anon" };
   }

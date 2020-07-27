@@ -37,13 +37,13 @@ const updateCitationSql = `
 `;
 
 const formatCitation = (note: Note): UpdateCitationValues => {
-  let text = flow(thirty, dequote, byline)(note.body);
+  let text = flow(sanitise, thirty, dequote)(note.body);
   let { citationText, attribution } = splitCitation(text);
 
-  const blurbText = flow(truncate, sanitise)(citationText);
-  const blurbAttribution = delink(attribution);
+  const blurbText = flow(truncate)(citationText);
+  const blurbAttribution = flow(byline, delink)(attribution);
   const bodyText = parse(citationText);
-  const bodyAttribution = link(attribution);
+  const bodyAttribution = flow(delink, byline, link)(attribution);
 
   const path = `/citations/${note.id}`;
   const blurb = tidyHtml(`

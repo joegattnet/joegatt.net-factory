@@ -16,6 +16,18 @@ test("Splits correctly even when there are two dashes", () => {
   });
 });
 
+test("Splits correctly even when the text is complex", () => {
+  expect(
+    splitCitation(
+      'This is a <strong>quote</strong>.\n-- “LRB · Malcolm Bull · Great Again: America’s Heidegger” at <a href="https://lrb.co.uk/patty">https://lrb.co.uk/patty</a>'
+    )
+  ).toMatchObject({
+    citationText: "This is a <strong>quote</strong>.",
+    attribution:
+      '“LRB · Malcolm Bull · Great Again: America’s Heidegger” at <a href="https://lrb.co.uk/patty">https://lrb.co.uk/patty</a>',
+  });
+});
+
 test("Splits correctly even when the citation text is shorter than the attribution", () => {
   expect(
     splitCitation("The quotation--is shorter than the unexpected attribution")
