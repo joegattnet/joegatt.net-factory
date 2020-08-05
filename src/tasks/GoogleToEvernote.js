@@ -210,21 +210,22 @@ const chapters = [
     const bodyText = formatBody(res.data);
 
     const contentHash = md5(`${documentTitle}${bodyText}`)
-    const fileName = `${parameterize(res.data.title)}|${text.evernoteId}|${Date.now()}|${contentHash}.txt`;
+    const fileName = `${parameterize(documentTitle)}|${text.evernoteId}|${Date.now()}|${contentHash}.txt`;
     const filePath = path.resolve(__dirname, `../../content/${fileName}`);  
 
     fs.readdir(path.resolve(__dirname, `../../content`), (err, items) => {
       if (err) return console.error(err);
-      const latestSavedFileName = items[items.length - 1];
-      const latestSavedHash = latestSavedFileName.split(/\||\./)[3];
-      if (contentHash === latestSavedHash) return console.log('Content has not changed. Not saving!');
+      const alreadySaved = items.some(item => {
+        const [, guid, , hash] = item.split(/\||\./);
+        return (guid === text.evernoteId && hash === contentHash);
+      });
+      if (alreadySaved) return console.log(`${documentTitle} has not changed. Not saving!`);
 
       fs.writeFile(filePath, bodyText, (err) => {
         if (err) return console.error(err);
         console.log(`Content stored to ${fileName}`);
       });
-      updateEvernoteNote(noteStore, text.evernoteId, res.data.title, bodyText);  
-
+      updateEvernoteNote(noteStore, text.evernoteId, documentTitle, bodyText);
     });
   });
 }
