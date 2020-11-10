@@ -57,7 +57,10 @@ typings/
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 
-
 # etc
 dist
-
+*secret*
+*credentials.json
+*token.json
+content/
+content*

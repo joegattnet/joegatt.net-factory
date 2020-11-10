@@ -1,4 +1,4 @@
-# joegatt.net-gardeners
+# joegatt.net-factory
 
 Grooming daemons for joegatt.net
 

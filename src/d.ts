@@ -3,47 +3,47 @@ interface Attributes {
 }
 
 interface EvernoteNote {
-  active:	boolean;
+  guid: string,
+  title: string,
+  content: string,
+  contentHash: string,
+  contentLength: number,
+  created: number,
+  updated: number,
+  deleted: null,
+  active: Boolean,
+  updateSequenceNum: number,
+  notebookGuid: string,
+  tagGuids: Array<string>,
+  resources: null,
   attributes: {
-    subjectDate: number;
-    altitude: BigInt;
-    // applicationData: Array<string, string>;
-    author:	string;
-    // classifications: Array<string, string>;
-    conflictSourceNoteGuid:	BigInt;
-    contentClass:	string;
-    creatorId: BigInt;
-    lastEditedBy:	string;
-    lastEditorId:	BigInt;
-    latitude: number;
-    longitude: number;
-    noteTitleQuality: BigInt
-    placeName:	string;
-    reminderDoneTime: number;
-    reminderOrder: BigInt
-    reminderTime: number;
-    shareDate: number;
-    sharedWithBusiness: boolean;
-    source: string;
-    sourceApplication: string;
-    sourceURL: string;
-  };
-  content: string;
-  contentHash: string;
-  contentLength: number;
-  created: number;
-  deleted: number;
-  guid: string;
-  // limits:	NoteLimits;
-  notebookGuid:	string;
-  // resources: Array<Resource>;
-  // restrictions:	NoteRestrictions;
-  // sharedNotes: Array<SharedNote>;
-  tagGuids:	Array<string>;
-  tagNames:	Array<string>;
-  title: string;
-  updateSequenceNum: number;
-  updated: number;
+    subjectDate: null,
+    latitude: null,
+    longitude: null,
+    altitude: null,
+    author: 'Joe Gatt',
+    source: null,
+    sourceURL: 'file:///',
+    sourceApplication: null,
+    shareDate: null,
+    reminderOrder: null,
+    reminderDoneTime: null,
+    reminderTime: null,
+    placeName: null,
+    contentClass: null,
+    applicationData: null,
+    lastEditedBy: null,
+    classifications: null,
+    creatorId: null,
+    lastEditorId: null,
+    sharedWithBusiness: null,
+    conflictSourceNoteGuid: null,
+    noteTitleQuality: 0
+  },
+  tagNames: null,
+  sharedNotes: null,
+  restrictions: null,
+  limits: null
 }
 
 interface EvernoteNotebook {
@@ -51,18 +51,18 @@ interface EvernoteNotebook {
 }
 
 interface EvernoteNoteStore {
-  createNote: Function;
+  createNote: Function,
   updateNote: Function
 }
 
 interface GoogleCredentials {
-  installed: {
-    client_id: string;
-    project_id: string;
-    auth_uri: string;
-    token_uri:string;
-    auth_provider_x509_cert_url: string;
-    client_secret: string;
+  installed:{
+    client_id: string,
+    project_id: string,
+    auth_uri: string,
+    token_uri:string,
+    auth_provider_x509_cert_url: string,
+    client_secret: string,
     redirect_uris: Array<string>
   }
 }
