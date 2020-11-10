@@ -106,7 +106,7 @@ const formatBody = data => {
       return ['',`<strong>${headingText}</strong>`.replace(/\{\{\{\{/, '{{').replace(/\}\}\}\}/, '}}')];
     }
     if (chunk.paragraph.paragraphStyle.namedStyleType === 'HEADING_5') {
-      const headingText = chunk.paragraph.elements[0].textRun.content.trim();
+      const headingText = chunk.paragraph.elements[0].textRun && chunk.paragraph.elements[0].textRun.content.trim();
       if (headingText === '--30--' || headingText === '-30-') return headingText;
       return [' ',`{\{${headingText}\}\}`];
     }
@@ -182,7 +182,18 @@ let chapters = [
     evernoteId: 'c967e410-ebdb-4de8-aade-9f7b683e83e7',
     name: 'Chapter 5'
   },
-  { name: 'Chapter 6', googleDocumentId:'', evernoteId: '0a56703b-f884-4a13-901d-a4cb81d55c90' }
+  { 
+    name: 'Chapter 6',
+    googleDocumentId:'1BMepUF3b2Gf7SsLsj7fODc-Omb-fdYMntxvezIe_A_U',
+    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    evernoteId: '0a56703b-f884-4a13-901d-a4cb81d55c90' 
+  },
+  { 
+    name: 'Chapter 7',
+    googleDocumentId:'1Y1gEufUswFM5qtNP_htIRij9io7l0Y823Sxc_g1S6uE',
+    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    evernoteId: 'e011937f-ca8f-4fc5-8ed4-ecc937f83dc4' 
+  }
 ];
 
 chapters[100] = {
@@ -295,21 +306,21 @@ chapters[1001] = {
     const documentTitle = res.data.title;
     const bodyText = formatBody(res.data);
 
-    docs.documents.batchUpdate({
-      documentId: text.googleDocumentIdNoAnnotations,
-      requestBody: {
-        requests: [
-          {
-            insertText: {
-              location: {
-                index: 1
-              },
-              text: formatBodyFromGoogleDoc(res.data)
-            }
-          }
-        ]
-      }
-    });
+    // docs.documents.batchUpdate({
+    //   documentId: text.googleDocumentIdNoAnnotations,
+    //   requestBody: {
+    //     requests: [
+    //       {
+    //         insertText: {
+    //           location: {
+    //             index: 1
+    //           },
+    //           text: formatBodyFromGoogleDoc(res.data)
+    //         }
+    //       }
+    //     ]
+    //   }
+    // });
 
     const contentHash = md5(`${documentTitle}${bodyText}`)
     const fileName = `${parameterize(documentTitle)}|${text.evernoteId}|${Date.now()}|${contentHash}.txt`;
