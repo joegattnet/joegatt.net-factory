@@ -94,7 +94,7 @@ const updateAllCitations = async () => {
     );
     console.log(chalk.bold.green(`Updated ${citations.length} citations!`));
   } catch (error) {
-    console.log(chalk.bold.red(`Updating citations faied: ${error}`));
+    console.log(chalk.bold.red(`Updating citations failed: ${error}`));
   }
 
   client.end();
