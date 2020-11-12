@@ -32,6 +32,7 @@
     "pg": "^8.2.1",
     "pretty": "^2.0.0",
     "sanitize-html": "^1.26.0",
+    "slack": "^11.0.2",
     "smartquotes": "^2.3.1",
     "truncate-html": "^1.0.3"
   },

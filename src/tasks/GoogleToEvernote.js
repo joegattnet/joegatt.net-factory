@@ -278,6 +278,9 @@ chapters[1001] = {
 
 
  /*****************************************************************************/
+ let token = process.env.SLACK_BOT_TOKEN
+ let Slack = require('slack')
+ let bot = new Slack({token})
 
  function googleToEvernote(auth) {
   const docs = google.docs({version: 'v1', auth});
@@ -336,7 +339,14 @@ chapters[1001] = {
 
       fs.writeFile(filePath, bodyText, (err) => {
         if (err) return console.error(err);
-        console.log(`Content stored to ${fileName}`);
+        const message = `Content stored to ${fileName}`;
+        const shorterMessage = `${parameterize(documentTitle)} saved from Google doc.`;
+        console.log(message);
+        ;(async function main() {
+          // logs {args:{hyper:'card'}}
+          var result = await bot.chat.postMessage({channel: 'events', text: shorterMessage});
+          console.log(result)
+        })()
       });
       updateEvernoteNote(noteStore, text.evernoteId, documentTitle, bodyText);
     });
