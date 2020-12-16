@@ -1,11 +1,12 @@
 // https://slack.dev/node-slack-sdk/web-api
 
 import fs from 'fs';
-import { google } from 'googleapis';
-import readline from 'readline';
 import path from 'path';
-import parameterize from 'parameterize';
-import md5 from 'md5';
+
+const googleDocsAuthorize = require('../components/googleDocsAuthorize');
+const googleToEvernote = require('../components/googleToEvernote');
+
+const CREDENTIALS_PATH = path.resolve(__dirname, '../../googledocs.credentials.json');
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
@@ -14,128 +15,12 @@ if (process.env.NODE_ENV !== 'production') {
   }
 }
 
-// If modifying these scopes, delete token.json.
-const SCOPES = ['https://www.googleapis.com/auth/documents'];
-// The file token.json stores the user's access and refresh tokens, and is
-// created automatically when the authorization flow completes for the first
-// time.
-const CREDENTIALS_PATH = path.resolve(__dirname, '../../googledocs.credentials.json');
-const TOKEN_PATH = path.resolve(__dirname, '../../googledocs.token.json');
-
-// Load client secrets from a local file.
 fs.readFile(CREDENTIALS_PATH, (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Docs API.
-  authorize(JSON.parse(content.toString()), googleToEvernote);
+  googleDocsAuthorize(JSON.parse(content.toString()), googleToEvernote);
 });
 
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {GoogleCredentials} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials: GoogleCredentials, callback: Function) {
-  const {client_secret, client_id, redirect_uris} = credentials.installed;
-  const oAuth2Client = new google.auth.OAuth2(
-      client_id, client_secret, redirect_uris[0]);
-
-  // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
-    if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token.toString()));
-    callback(oAuth2Client);
-  });
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getNewToken(oAuth2Client: any, callback: Function) {
-  const authUrl = oAuth2Client.generateAuthUrl({
-    access_type: 'offline',
-    scope: SCOPES,
-  });
-  console.log('Authorize this app by visiting this url:', authUrl);
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-  rl.question('Enter the code from that page here: ', (code) => {
-    rl.close();
-    oAuth2Client.getToken(code, (err: String, token: String) => {
-      if (err) return console.error('Error retrieving access token', err);
-      oAuth2Client.setCredentials(token);
-      // Store the token to disk for later program executions
-      fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-        if (err) console.error(err);
-        console.log('Token stored to', TOKEN_PATH);
-      });
-      callback(oAuth2Client);
-    });
-  });
-}
-
-/**
- * Format an individual footnote for GoogleDocs.
- * @param {array} footnotes The array of footnotes.
- * @param {number} footnoteId The array index number for this footnote.
- */
-const formatFootnote = (footnotes: Array<Footnote>, footnoteId: number): string => {
-  // REVIEW: Can we refactor this?
-  const textArray = footnotes[footnoteId].content.map(chunk => {
-    if (!chunk.paragraph) return null;
-    return chunk.paragraph.elements.map(element => {
-      if (element.textRun && element.textRun.textStyle.link) {
-        return `<a href="${element.textRun.textStyle.link.url}">${element.textRun.content.trim()}</a>`;
-      }
-      if (element.textRun) return element.textRun.content.trim();
-      if (element.footnoteReference) return formatFootnote(footnotes, element.footnoteReference.footnoteId);      
-      return null;
-    }).join(' ');
-  });
-  const textString = textArray.join('');
-  textString.replace(/ +/gm, ' ');
-  return `[${textString}]`;
-}
-
-/**
- * Format the note body for GoogleDocs.
- * @param {object} data The body object.
- */
-// const formatBody = (data: GaxiosResponse<docs_v1.Schema$Document>): string => {
-const formatBody = (data: any): string => {
-  const textArray = data.body.content.map((chunk: ContentChunk) => {
-    if (!chunk.paragraph) return null;
-    if (chunk.paragraph.paragraphStyle.namedStyleType === 'TITLE') return null;
-    if (chunk.paragraph.paragraphStyle.namedStyleType === 'HEADING_4') {
-      const headingText = chunk.paragraph.elements[0].textRun.content.trim();
-      return ['',`<strong>${headingText}</strong>`.replace(/\{\{\{\{/, '{{').replace(/\}\}\}\}/, '}}')];
-    }
-    if (chunk.paragraph.paragraphStyle.namedStyleType === 'HEADING_5') {
-      const headingText = chunk.paragraph.elements[0].textRun && chunk.paragraph.elements[0].textRun.content.trim();
-      if (headingText === '--30--' || headingText === '-30-') return headingText;
-      return [' ',`{\{${headingText}\}\}`];
-    }
-    return chunk.paragraph.elements.map(element => {
-      if (element.textRun && element.textRun.textStyle.link) {
-        return `<a href="${element.textRun.textStyle.link.url}">${element.textRun.content.trim()}</a>`;
-      }
-      if (element.textRun) return element.textRun.content.trim();
-      if (element.footnoteReference) return formatFootnote(data.footnotes, element.footnoteReference.footnoteId);
-      return null;
-    }).join(' ');
-  });
-  const textString = textArray.flat().filter(Boolean).map((line: string) => line && `<p>${line.replace(/\&/gm, '&amp;').replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ')}</p>\n`).join('\n').trim();
-  // textString.replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ');
-  // return textString.replace(/\n\n\n\n\{\{/gm, '\n\n\n{{').replace(/\}\}\n\n/gm, '}}\n').split('\n');
-  return textString;
-}
-
-// const formatBodyFromGoogleDoc = data => {
+// const googleDocsFormatBodyFromGoogleDoc = data => {
 //   // This is probably temporary since we will want the permanent one to do this conversion from Evernote format
 //   const textArray = data.body.content.map(chunk => {
 //     if (!chunk.paragraph) return null;
@@ -234,143 +119,3 @@ chapters[1001] = {
   evernoteId: '30f3a555-f983-4089-9e90-a1c876f9818b',
   name: 'Political 1'
 };
-
-/**
- * Prints the title of a sample doc:
- * https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth 2.0 client.
- */
-
-/******************************************************************************
-                                  EVERNOTE
- ******************************************************************************/
-
-import * as Evernote from 'evernote';
-
-/**
- * Update the note in Evernote.
- * @param {EvernoteNoteStore} noteStore Evernote note store.
- * @param {Evernote.Types.Guid} guid Evernote guid for this note.
- * @param {string} noteBody The note body.
- * @param {string} noteTitle The note title (optional).
- * @param {Evernote.Types.Notebook} parentNotebook The parent notebook (optional).
- */
-
-function updateEvernoteNote(
-      noteStore: EvernoteNoteStore,
-      guid: Evernote.Types.Guid,
-      noteBody: string,
-      noteTitle?: string,
-      parentNotebook?: Evernote.Types.Notebook
-    ) {
-
-    let nBody = '<?xml version="1.0" encoding="UTF-8"?>';
-    nBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-    nBody += "<en-note>" + noteBody + "</en-note>";
-   
-    let ourNote = new Evernote.Types.Note();
-    ourNote.guid = guid;
-    ourNote.title = noteTitle;
-    ourNote.content = nBody;
-   
-    if (parentNotebook && parentNotebook.guid) {
-      ourNote.notebookGuid = parentNotebook.guid;
-    }
-
-    noteStore.updateNote(ourNote)
-      .then(function(note: Evernote.Types.Note) {
-        // Do something with `note`
-        console.log(note);
-      }).catch(function (err: string) {
-        console.log(err, 'http://dev.evernote.com/documentation/reference/Errors.html#Enum_EDAMErrorCode');
-      });
-  }
-
- /*****************************************************************************/
- /*****************************************************************************/
- /*****************************************************************************/
-
-  const TOKEN = process.env.EVERNOTE_TOKEN;
-  const client = new Evernote.Client({
-    token: TOKEN,
-    sandbox: false,
-    china: false
-  });
-  var noteStore = client.getNoteStore();
-
- /*****************************************************************************/
- let token = process.env.SLACK_BOT_TOKEN
- let Slack = require('slack')
- let bot = new Slack({token})
-
- function googleToEvernote(auth: string) {
-  const docs = google.docs({version: 'v1', auth});
-
-  // Needs drive permissions - use browser sample
-  // const drive = google.drive({ version: 'v3', auth });
-  // drive.files.list({}, (err, res) => {
-  //   if (err) throw err;
-  //   const files = res.data.files;
-  //   if (files.length) {
-  //   files.map((file) => {
-  //     console.log(file);
-  //   });
-  //   } else {
-  //     console.log('No files found');
-  //   }
-  // });
-
-  const text = chapters[parseInt(process.argv[2], 10)];
-  docs.documents.get({
-    documentId: text.googleDocumentId,
-  }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    if (!res || !res.data) return console.log('Response is empty!');
-    // https://www.googleapis.com/drive/v2/files/
-    // console.log(res);
-    const documentTitle = res.data.title || 'Untitled';
-    const bodyText = formatBody(res.data);
-
-    // docs.documents.batchUpdate({
-    //   documentId: text.googleDocumentIdNoAnnotations,
-    //   requestBody: {
-    //     requests: [
-    //       {
-    //         insertText: {
-    //           location: {
-    //             index: 1
-    //           },
-    //           text: formatBodyFromGoogleDoc(res.data)
-    //         }
-    //       }
-    //     ]
-    //   }
-    // });
-
-    const contentHash = md5(`${documentTitle}${bodyText}`)
-    const fileName = `${parameterize(documentTitle)}|${text.evernoteId}|${Date.now()}|${contentHash}.txt`;
-    const filePath = path.resolve(__dirname, `../../content/${fileName}`);  
-
-    fs.readdir(path.resolve(__dirname, `../../content`), (err, items) => {
-      if (err) return console.error(err);
-      const alreadySaved = items.some(item => {
-        const [, guid, , hash] = item.split(/\||\./);
-        return (guid === text.evernoteId && hash === contentHash);
-      });
-      if (alreadySaved) return console.log(`${documentTitle} has not changed. Not saving!`);
-
-      fs.writeFile(filePath, bodyText, (err) => {
-        if (err) return console.error(err);
-        const message = `Content stored to ${fileName}`;
-        const shorterMessage = `${parameterize(documentTitle)} saved from Google doc.`;
-        console.log(message);
-        ;(async function main() {
-          // logs {args:{hyper:'card'}}
-          var result = await bot.chat.postMessage({channel: 'events', text: shorterMessage});
-          console.log(result)
-        })()
-      });
-      updateEvernoteNote(noteStore, text.evernoteId, bodyText, documentTitle);
-    });
-  });
-}

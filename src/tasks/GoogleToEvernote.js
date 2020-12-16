@@ -285,19 +285,23 @@ chapters[1001] = {
  function googleToEvernote(auth) {
   const docs = google.docs({version: 'v1', auth});
 
+
+  const updateNoAnnotations = true;
   // Needs drive permissions - use browser sample
-  // const drive = google.drive({ version: 'v3', auth });
-  // drive.files.list({}, (err, res) => {
-  //   if (err) throw err;
-  //   const files = res.data.files;
-  //   if (files.length) {
-  //   files.map((file) => {
-  //     console.log(file);
-  //   });
-  //   } else {
-  //     console.log('No files found');
-  //   }
-  // });
+  if (updateNoAnnotations) {
+    const drive = google.drive({ version: 'v3', auth });
+    drive.files.list({}, (err, res) => {
+      if (err) throw err;
+      const files = res.data.files;
+      if (files.length) {
+      files.map((file) => {
+        console.log(file);
+      });
+      } else {
+        console.log('No files found');
+      }
+    });
+  };
 
   const text = chapters[parseInt(process.argv[2], 10)];
   docs.documents.get({
@@ -309,21 +313,23 @@ chapters[1001] = {
     const documentTitle = res.data.title;
     const bodyText = formatBody(res.data);
 
-    // docs.documents.batchUpdate({
-    //   documentId: text.googleDocumentIdNoAnnotations,
-    //   requestBody: {
-    //     requests: [
-    //       {
-    //         insertText: {
-    //           location: {
-    //             index: 1
-    //           },
-    //           text: formatBodyFromGoogleDoc(res.data)
-    //         }
-    //       }
-    //     ]
-    //   }
-    // });
+    if (updateNoAnnotations) {
+      docs.documents.batchUpdate({
+        documentId: text.googleDocumentIdNoAnnotations,
+        requestBody: {
+          requests: [
+            {
+              insertText: {
+                location: {
+                  index: 1
+                },
+                text: formatBodyFromGoogleDoc(res.data)
+              }
+            }
+          ]
+        }
+      });
+    }
 
     const contentHash = md5(`${documentTitle}${bodyText}`)
     const fileName = `${parameterize(documentTitle)}|${text.evernoteId}|${Date.now()}|${contentHash}.txt`;
