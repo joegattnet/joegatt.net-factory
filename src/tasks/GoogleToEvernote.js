@@ -26,7 +26,7 @@ const TOKEN_PATH = path.resolve(__dirname, '../../googledocs.token.json');
 fs.readFile(CREDENTIALS_PATH, (err, content) => {
   if (err) return console.log('Error loading client secret file:', err);
   // Authorize a client with credentials, then call the Google Docs API.
-  authorize(JSON.parse(content), googleToEvernote);
+  authorize(JSON.parse(content), googleToEvernote, { mytext: 'XYZ' });
 });
 
 /**
@@ -35,7 +35,7 @@ fs.readFile(CREDENTIALS_PATH, (err, content) => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials, callback, params) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -44,7 +44,7 @@ function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+    callback(oAuth2Client, params);
   });
 }
 
@@ -218,6 +218,13 @@ chapters[102] = {
   name: 'Qatel 2'
 };
 
+chapters[103] = {
+  googleDocumentId: '14_fso6pJmMHE1nTFBkq9MuzeGRt9kH5dfIiz1eBCtvw',
+  googleDocumentIdNoAnnotations: '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk',
+  evernoteId: 'ef60f921-d339-4dc2-8e2b-9b724ea79f26',
+  name: 'Qatel 3'
+};
+
 chapters[1001] = {
   googleDocumentId: '1rCoKcT6-TWAlcvP-etS6LSKbA10qwCTrWXMdBigBRCs',
   googleDocumentIdNoAnnotations: '1oLCCBnjdNA5vlFpVy5_2qMY63sFS5Ojz0eTpz9SjsLA',
@@ -280,13 +287,14 @@ chapters[1001] = {
  /*****************************************************************************/
  let token = process.env.SLACK_BOT_TOKEN
  let Slack = require('slack')
- let bot = new Slack({token})
+ let slackBot = new Slack({token})
 
- function googleToEvernote(auth) {
+ function googleToEvernote(auth, params) {
+  console.log('MYTEXT: ', params.mytext);
   const docs = google.docs({version: 'v1', auth});
 
 
-  const updateNoAnnotations = true;
+  const updateNoAnnotations = false;
   // Needs drive permissions - use browser sample
   if (updateNoAnnotations) {
     const drive = google.drive({ version: 'v3', auth });
@@ -304,6 +312,7 @@ chapters[1001] = {
   };
 
   const text = chapters[parseInt(process.argv[2], 10)];
+  console.log('ID: ', text.googleDocumentId);
   docs.documents.get({
     documentId: text.googleDocumentId,
   }, (err, res) => {
@@ -346,11 +355,13 @@ chapters[1001] = {
       fs.writeFile(filePath, bodyText, (err) => {
         if (err) return console.error(err);
         const message = `Content stored to ${fileName}`;
-        const shorterMessage = `${parameterize(documentTitle)} saved from Google doc.`;
+        const googleLink = `https://docs.google.com/document/d/${text.googleDocumentId}/edit#`;
+        const evernoteLink = `https://www.evernote.com/Home.action?login=true#n=${text.evernoteId}&s=s8&ses=4&sh=2&sds=5&`;
+        const shorterMessage = `"${documentTitle}" saved from <${googleLink}|Google> to <${evernoteLink}|Evernote>.`;
         console.log(message);
         ;(async function main() {
           // logs {args:{hyper:'card'}}
-          var result = await bot.chat.postMessage({channel: 'events', text: shorterMessage});
+          var result = await slackBot.chat.postMessage({channel: 'events', text: shorterMessage});
           console.log(result)
         })()
       });

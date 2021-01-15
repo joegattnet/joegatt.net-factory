@@ -13,7 +13,7 @@ const TOKEN_PATH = path.resolve(__dirname, '../../googledocs.token.json');
 
 export {};
 
-module.exports = (credentials: GoogleCredentials, callback: Function) => {
+module.exports = (credentials: GoogleCredentials, callback: Function, callbackParams: GoogleDocsParams) => {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
@@ -23,6 +23,6 @@ module.exports = (credentials: GoogleCredentials, callback: Function) => {
     // if (err) return getNewToken(oAuth2Client, callback);
     // REVIEW: this cannot happen during API call
     oAuth2Client.setCredentials(JSON.parse(token.toString()));
-    callback(oAuth2Client);
+    callback(oAuth2Client, callbackParams);
   });
 };

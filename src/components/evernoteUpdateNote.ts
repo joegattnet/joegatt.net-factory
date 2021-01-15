@@ -11,6 +11,7 @@ import * as Evernote from 'evernote';
  * @param {Evernote.Types.Guid} guid Evernote guid for this note.
  * @param {string} noteBody The note body.
  * @param {string} noteTitle The note title (optional).
+ * @param {string} sourceURL The url where this text originates (optional).
  * @param {Evernote.Types.Notebook} parentNotebook The parent notebook (optional).
  */
 
@@ -21,6 +22,7 @@ module.exports = (
     guid: Evernote.Types.Guid,
     noteBody: string,
     noteTitle?: string,
+    sourceURL?: string,
     parentNotebook?: Evernote.Types.Notebook
   ) => {
 
@@ -32,6 +34,7 @@ module.exports = (
   ourNote.guid = guid;
   ourNote.title = noteTitle;
   ourNote.content = nBody;
+  if (sourceURL) ourNote.attributes = { sourceURL };
   
   if (parentNotebook && parentNotebook.guid) {
     ourNote.notebookGuid = parentNotebook.guid;

@@ -82,3 +82,17 @@ interface Footnote {
     ContentChunk
   ]
 }
+
+interface ParsedGoogleDoc {
+  bodyText: string,
+  evernoteId: string,
+  googleDocsCollatedId?: string,
+  googleDocsUnannotatedId?: string,
+  title?: string
+}
+
+interface GoogleDocsParams {
+  googleDocsId: string,
+  collate?: boolean,
+  unannotate?: boolean
+}

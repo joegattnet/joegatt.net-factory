@@ -1,0 +1,19 @@
+const googleDocsFormatBodyFromGoogleDoc = data => {
+  // This is probably temporary since we will want the permanent one to do this conversion from Evernote format
+  const textArray = data.body.content.map(chunk => {
+    if (!chunk.paragraph) return null;
+    if (chunk.paragraph.paragraphStyle.namedStyleType === 'TITLE') return null;
+    if (chunk.paragraph.paragraphStyle.namedStyleType === 'HEADING_4') return null;
+    if (chunk.paragraph.paragraphStyle.namedStyleType === 'HEADING_5') return '\n';
+    return chunk.paragraph.elements.map(element => {
+      if (element.textRun && element.textRun.textStyle.link) {
+        return `<a href="${element.textRun.textStyle.link.url}">${element.textRun.content.trim()}</a>`;
+      }
+      if (element.textRun) return element.textRun.content.trim();
+      if (element.footnoteReference) return null;
+      return null;
+    }).join(' ');
+  });
+  const textString = textArray.flat().filter(Boolean).map(line => line && `${line.replace(/\&/gm, '&amp;').replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ')}\n`).join('').trim();
+  return textString.replace(/\n\n\n\t/gm, '\n\n\n');
+}

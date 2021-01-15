@@ -7,7 +7,7 @@ const googleDocsFormatFootnote = require('./googleDocsFormatFootnote');
 
 export {};
 
-module.exports = (data: any): string => {
+module.exports = (data: any): ParsedGoogleDoc => {
   const textArray = data.body.content.map((chunk: ContentChunk) => {
     if (!chunk.paragraph) return null;
     switch (chunk.paragraph.paragraphStyle.namedStyleType) {
@@ -34,10 +34,12 @@ module.exports = (data: any): string => {
       }
     }
   });
-  const textString = textArray.flat().filter(Boolean).map((line: string) => line && `<p>${line.replace(/\&/gm, '&amp;').replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ')}</p>\n`).join('\n').trim();
-  // textString.replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ');
-  // return textString.replace(/\n\n\n\n\{\{/gm, '\n\n\n{{').replace(/\}\}\n\n/gm, '}}\n').split('\n');
-  return textString;
+  const bodyText = textArray.flat().filter(Boolean).map((line: string) => line && `<p>${line.replace(/\&/gm, '&amp;').replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ')}</p>\n`).join('\n').trim();
+  const evernoteId = bodyText.match(/metadata-evernote-id:\s*([a-z0-9\-]*)/i)[1];
+  const googleDocsUnannotatedId = undefined;
+  const googleDocsCollatedId = undefined;
+  const title = undefined;
+  return { bodyText, evernoteId, googleDocsUnannotatedId, googleDocsCollatedId, title };
 };
 
 // const googleDocsFormatBody = (data: GaxiosResponse<docs_v1.Schema$Document>): string => {
