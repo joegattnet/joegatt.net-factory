@@ -61,7 +61,7 @@ interface ContentChunk {
       }
     ],
     paragraphStyle: {
-      namedStyleType: 'TITLE' | 'HEADING_4' | 'HEADING_5'
+      namedStyleType: 'TITLE' | 'HEADING_4' | 'HEADING_5' | 'NORMAL_TEXT'
     }
   }
 }
@@ -95,4 +95,8 @@ interface GoogleDocsParams {
   googleDocsId: string,
   collate?: boolean,
   unannotate?: boolean
+}
+
+interface Vocabulary {
+  [key: string]: number 
 }
