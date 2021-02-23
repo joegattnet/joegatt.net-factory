@@ -1,0 +1,31 @@
+<p>So, in this example. Pie &amp; mash. And apple pie.</p>
+
+<p>And in this, aerofak.</p>
+
+<p> </p>
+
+<p>{{Pie &amp; Mash}}</p>
+
+<p>In this example we get a <a href="https://stackoverflow.com/questions/1842308/having-stylesheet-link-in-body">link</a> which will work. [Then <a href="https://knowyourmeme.com/memes/another-one">another one</a> in the footnotes.] Not everybody can stay informed. [Here’s something else.] </p>
+
+<p>Even Walter Lipmann.</p>
+
+<p><strong>Long-Stemmed</strong></p>
+
+<p>Modes of politics and other things. This is a bit strange. It’s disappearing from here.</p>
+
+<p>Going to the shrine.</p>
+
+<p> </p>
+
+<p>{{Extra}}</p>
+
+<p>metadata-collated-id:	Brrrr</p>
+
+<p>metadata-unannotated-id:	1234</p>
+
+<p>metadata-evernote-id:	4d6bf3b8-0c94-44f1-a1fb-c0e37faf4213</p>
+
+<p>metadata-joegattnet-id:	123</p>
+
+<p>metadata-joegattnet-url: <a href="https://joegatt.net/wutz">https://joegatt.net/wutz</a> </p>

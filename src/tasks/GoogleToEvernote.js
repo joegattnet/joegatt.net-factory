@@ -98,6 +98,9 @@ const formatFootnote = (footnoteId, footnotes) => {
 }
 
 const formatBody = data => {
+  const filePath = path.resolve(__dirname, `../../content/example.json`);
+  // fs.writeFile(filePath, JSON.stringify(data), (err) => { console.log('EEEEEEEEEEEEE', err)});
+
   const textArray = data.body.content.map(chunk => {
     if (!chunk.paragraph) return null;
     if (chunk.paragraph.paragraphStyle.namedStyleType === 'TITLE') return null;
@@ -122,6 +125,7 @@ const formatBody = data => {
   const textString = textArray.flat().filter(Boolean).map(line => line && `<p>${line.replace(/\&/gm, '&amp;').replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ')}</p>\n`).join('\n').trim();
   // textString.replace(/\n\n\n+/gm, '\n\n').replace(/ +/gm, ' ');
   // return textString.replace(/\n\n\n\n\{\{/gm, '\n\n\n{{').replace(/\}\}\n\n/gm, '}}\n').split('\n');
+  // console.log(textString);
   return textString;
 }
 
@@ -247,7 +251,7 @@ chapters[1001] = {
   function updateEvernoteNote(noteStore, guid, noteTitle, noteBody, parentNotebook) {
     var nBody = '<?xml version="1.0" encoding="UTF-8"?>';
     nBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-    nBody += "<en-note>" + noteBody + "</en-note>";
+    nBody += "<en-note><div style=\"background-color: #ff0\">" + noteBody + "</div></en-note>";
    
     // Create note object
     var ourNote = new Evernote.Types.Note();
@@ -365,6 +369,7 @@ chapters[1001] = {
           console.log(result)
         })()
       });
+      console.log(bodyText);
       updateEvernoteNote(noteStore, text.evernoteId, documentTitle, bodyText);
     });
   });

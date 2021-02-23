@@ -1,9 +1,8 @@
 /**
  * Get Google Doc and update Evernote.
  *
- * @param {string} auth Evernote note store.
- * @param {string} googleDocsId Evernote guid for this note.
- * @param {string} collate The note body. (optional)
+ * @param {string} auth GoogleDocs auth.
+ * @param {string} params GoogleDocsParams object.
  */
 
 import * as Evernote from 'evernote';
@@ -16,7 +15,7 @@ import path from 'path';
 
 dotenv.config();
 
-const googleDocsFormatBody = require('./googleDocsFormatBody');
+const googleDocsParseBody = require('./googleDocsParseBody');
 const evernoteUpdateNote = require('./evernoteUpdateNote');
 
 const TOKEN = process.env.EVERNOTE_TOKEN;
@@ -61,7 +60,7 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     // https://www.googleapis.com/drive/v2/files/
     // console.log(res);
     const documentTitle = res.data.title || 'Untitled';
-    const { bodyText, evernoteId } = googleDocsFormatBody(res.data);
+    const { bodyText, evernoteId } = googleDocsParseBody(res.data);
     if (!evernoteId) return console.error('Evernote Id not found!');
 
     if (params.collate) {

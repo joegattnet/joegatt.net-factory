@@ -1,5 +1,5 @@
 /**
- * Format an individual footnote for GoogleDocs.
+ * Format an individual GoogleDocs footnote into our simplified format.
  * @param {Footnote} footnote The structured footnote object
  */
 

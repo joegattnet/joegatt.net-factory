@@ -1,4 +1,4 @@
-const clean = require("./clean");
+const clean = require("../components/clean");
 
 export default (text) => {
   return text;

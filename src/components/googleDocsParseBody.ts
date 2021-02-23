@@ -1,9 +1,9 @@
 /**
- * Format the note body for GoogleDocs.
+ * Parse GoogleDocs body and format into our simplified format.
  * @param {object} data The body object.
  */
 
-const googleDocsFormatFootnote = require('./googleDocsFormatFootnote');
+const googleDocsParseFootnote = require('./googleDocsParseFootnote');
 
 export {};
 
@@ -28,7 +28,7 @@ module.exports = (data: any): ParsedGoogleDoc => {
             return `<a href="${element.textRun.textStyle.link.url}">${element.textRun.content.trim()}</a>`;
           }
           if (element.textRun) return element.textRun.content.trim();
-          if (element.footnoteReference) return googleDocsFormatFootnote(data.footnotes[element.footnoteReference.footnoteId]);
+          if (element.footnoteReference) return googleDocsParseFootnote(data.footnotes[element.footnoteReference.footnoteId]);
           return null;
         }).join(' ');
       }
@@ -41,5 +41,3 @@ module.exports = (data: any): ParsedGoogleDoc => {
   const title = undefined;
   return { bodyText, evernoteId, googleDocsUnannotatedId, googleDocsCollatedId, title };
 };
-
-// const googleDocsFormatBody = (data: GaxiosResponse<docs_v1.Schema$Document>): string => {
