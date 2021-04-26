@@ -4,6 +4,7 @@
   "description": "Various services to groom notes",
   "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
     "lint": "eslint .",
     "prepush": "npm run lint && npm test",
     "start": "node .",
