@@ -1,6 +1,6 @@
 import express from "express";
 const app = express();
-const port = 9090;
+const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
