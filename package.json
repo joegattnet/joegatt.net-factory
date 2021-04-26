@@ -14,7 +14,7 @@
     "tsc:watch": "tsc --watch"
   },
   "keywords": [],
-  "author": "Joe Gatt",
+  "author": "Joe Gatt <joe@joegatt.net>",
   "license": "ISC",
   "dependencies": {
     "@types/filesystem": "0.0.29",
