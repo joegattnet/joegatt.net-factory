@@ -248,10 +248,12 @@ chapters[1001] = {
 
   var Evernote = require('evernote');
 
-  function updateEvernoteNote(noteStore, guid, noteTitle, noteBody, parentNotebook) {
+  function updateEvernoteNote(noteStore, guid, noteTitle, noteBody, googleLink, parentNotebook) {
     var nBody = '<?xml version="1.0" encoding="UTF-8"?>';
     nBody += '<!DOCTYPE en-note SYSTEM "http://xml.evernote.com/pub/enml2.dtd">';
-    nBody += "<en-note><div style=\"background-color: #ff0\">" + noteBody + "</div></en-note>";
+    nBody += "<en-note><div style=\"background-color: #667\">";
+    nBody += `<div>{{From GoogleDoc: <a href="${googleLink}">${noteTitle}</a> <small><strong>DO NOT EDIT HERE, IN EVERNOTE</strong></small>}}</div>`;
+    nBody += noteBody + "</div></en-note>";
    
     // Create note object
     var ourNote = new Evernote.Types.Note();
@@ -355,11 +357,11 @@ chapters[1001] = {
         return (guid === text.evernoteId && hash === contentHash);
       });
       if (alreadySaved) return console.log(`${documentTitle} has not changed. Not saving!`);
+      const googleLink = `https://docs.google.com/document/d/${text.googleDocumentId}/edit#`;
 
       fs.writeFile(filePath, bodyText, (err) => {
         if (err) return console.error(err);
         const message = `Content stored to ${fileName}`;
-        const googleLink = `https://docs.google.com/document/d/${text.googleDocumentId}/edit#`;
         const evernoteLink = `https://www.evernote.com/Home.action?login=true#n=${text.evernoteId}&s=s8&ses=4&sh=2&sds=5&`;
         const shorterMessage = `"${documentTitle}" saved from <${googleLink}|Google> to <${evernoteLink}|Evernote>.`;
         console.log(message);
@@ -370,7 +372,7 @@ chapters[1001] = {
         })()
       });
       console.log(bodyText);
-      updateEvernoteNote(noteStore, text.evernoteId, documentTitle, bodyText);
+      updateEvernoteNote(noteStore, text.evernoteId, documentTitle, bodyText, googleLink);
     });
   });
 }
