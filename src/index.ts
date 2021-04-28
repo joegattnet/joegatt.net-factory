@@ -1,9 +1,40 @@
 import express from "express";
-const app = express();
 const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
+
+const dev = process.env.NODE_ENV !== 'production';
+const log4js = require('log4js');
+const logger = log4js.getLogger();
+const loggerLevel = dev ? 'debug' : 'debug';
+const logAppender = dev ? 'console' : 'slack';
+
+log4js.configure({
+  appenders: {
+    console: {
+      app: 'joegatt.net-factory',
+      type: 'stdout',
+      fields: {
+        env: process.env.NODE_ENV,
+        app_name: 'joegatt.net-factory'
+      }
+    },
+    slack: {
+      type: '@log4js-node/slack',
+      token: process.env.SLACK_BOT_TOKEN,
+      channel_id: 'factory-logs',
+      username: 'joegatt.net-factory'
+    }
+  },
+  categories: {
+    default: { appenders: [logAppender], level: loggerLevel }
+  }
+});
+
+const app = express();
+
+app.use(log4js.connectLogger(logger, { level: loggerLevel }));
 
 // define a route handler for the default home page
 app.get('/', ( req, res ) => {
