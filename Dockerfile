@@ -2,7 +2,7 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY google*.json ./
+COPY googledocs.*.json ./
 COPY .env ./
 COPY auth.js ./
 COPY tsconfig.json ./
@@ -14,9 +14,9 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY --from=0 /usr/src/app/google*.json ./
-COPY --from=0 /usr/src/app/.env ./
-COPY --from=0 /usr/src/app/auth.js ./
+COPY /usr/src/app/googledocs.*.json ./
+COPY /usr/src/app/.env ./
+COPY /usr/src/app/auth.js ./
 RUN npm install --only=production
 COPY --from=0 /usr/src/app/dist ./dist
 EXPOSE 80
