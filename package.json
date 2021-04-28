@@ -17,8 +17,6 @@
   "author": "Joe Gatt <joe@joegatt.net>",
   "license": "ISC",
   "dependencies": {
-    "@log4js-node/slack": "^1.0.0",
-    "@xanthous/log4js-to-slack": "^1.2.0",
     "chalk": "^4.0.0",
     "dotenv": "^8.2.0",
     "evernote": "^2.0.5",

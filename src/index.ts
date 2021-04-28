@@ -3,6 +3,7 @@ const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
+const slackAppender = require('./tasks/slackAppender.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
@@ -21,8 +22,8 @@ log4js.configure({
       }
     },
     slack: {
-      type: '@xanthous/log4js-to-slack',
-      url: process.env.SLACK_WEBHOOK_URL_FACTORY_LOGS,
+      type: slackAppender,
+      webhook: process.env.SLACK_WEBHOOK_URL_FACTORY_LOGS,
     }
   },
   categories: {
