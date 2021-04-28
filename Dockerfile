@@ -2,7 +2,7 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY googledocs.*.json ./
+COPY googledocs.credentials.json ./
 COPY .env ./
 COPY tsconfig.json ./
 RUN npm install
@@ -13,7 +13,7 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
-COPY googledocs.*.json ./
+COPY googledocs.credentials.json ./
 COPY .env ./
 RUN ls -al
 RUN npm install --only=production
