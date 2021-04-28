@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
@@ -21,10 +21,8 @@ log4js.configure({
       }
     },
     slack: {
-      type: '@log4js-node/slack',
-      token: process.env.SLACK_BOT_TOKEN,
-      channel_id: 'factory-logs',
-      username: 'joegatt.net-factory'
+      type: '@xanthous/log4js-to-slack',
+      url: process.env.SLACK_WEBHOOK_URL_FACTORY_LOGS,
     }
   },
   categories: {
@@ -36,7 +34,6 @@ const app = express();
 
 app.use(log4js.connectLogger(logger, { level: loggerLevel }));
 
-// define a route handler for the default home page
 app.get('/', ( req, res ) => {
   res.send( "Hello world!" );
 });

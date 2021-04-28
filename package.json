@@ -18,7 +18,7 @@
   "license": "ISC",
   "dependencies": {
     "@log4js-node/slack": "^1.0.0",
-    "@types/filesystem": "0.0.29",
+    "@xanthous/log4js-to-slack": "^1.2.0",
     "chalk": "^4.0.0",
     "dotenv": "^8.2.0",
     "evernote": "^2.0.5",
@@ -38,6 +38,7 @@
     "parameterize": "^1.0.0",
     "pg": "^8.2.1",
     "pretty": "^2.0.0",
+    "request": "^2.88.2",
     "sanitize-html": "^1.26.0",
     "slack": "^11.0.2",
     "smartquotes": "^2.3.1",
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@types/evernote": "^2.0.0",
     "@types/express": "^4.17.11",
+    "@types/filesystem": "0.0.29",
     "@types/gapi": "0.0.39",
     "@types/htmlparser2": "^3.10.1",
     "@types/jest": "^25.2.3",
@@ -53,6 +55,7 @@
     "@types/node": "^14.14.21",
     "@types/parameterize": "^1.0.1",
     "@types/pg": "^7.14.3",
+    "@types/request": "^2.48.5",
     "@types/sanitize-html": "^1.23.2",
     "@typescript-eslint/eslint-plugin": "^3.1.0",
     "@typescript-eslint/parser": "^3.1.0",
