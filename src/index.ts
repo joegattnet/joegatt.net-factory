@@ -3,7 +3,7 @@ const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
-const slackAppender = require('./tasks/slackAppender.js');
+const slackAppender = require('./slackAppender.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
