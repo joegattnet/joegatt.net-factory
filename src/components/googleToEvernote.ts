@@ -7,11 +7,8 @@
 
 import * as Evernote from 'evernote';
 import * as dotenv from 'dotenv';
-import fs from 'fs';
+
 import { google } from 'googleapis';
-import md5 from 'md5';
-import parameterize from 'parameterize';
-import path from 'path';
 
 dotenv.config();
 
@@ -84,31 +81,12 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     const googleLink = `https://docs.google.com/document/d/${params.googleDocsId}/edit#`;
     const evernoteLink = `https://www.evernote.com/Home.action?login=true#n=${evernoteId}&s=s8&ses=4&sh=2&sds=5&`;
 
-    // Temp ***
-    const contentHash = md5(`${documentTitle}${bodyText}`)
-    const fileName = `${parameterize(documentTitle)}|${evernoteId}|${Date.now()}|${contentHash}.txt`;
-    const filePath = path.resolve(__dirname, `../../content/${fileName}`);  
+    const shorterMessage = `"${documentTitle}" saved from <${googleLink}|Google> to <${evernoteLink}|Evernote>.`;
+    ;(async function main() {
+      // logs {args:{hyper:'card'}}
+      await slackBot.chat.postMessage({channel: 'events', text: shorterMessage});
+    })();
 
-    fs.readdir(path.resolve(__dirname, `../../content`), (err, items) => {
-      if (err) return console.error(err);
-      const alreadySaved = items.some(item => {
-        const [, guid, , hash] = item.split(/\||\./);
-        return (guid === evernoteId && hash === contentHash);
-      });
-      if (alreadySaved) return console.log(`${documentTitle} has not changed. Not saving!`);
-
-      fs.writeFile(filePath, bodyText, (err) => {
-        if (err) return console.error(err);
-        // const message = `Content stored to ${fileName}`;
-        // console.log(message);
-        const shorterMessage = `"${documentTitle}" saved from <${googleLink}|Google> to <${evernoteLink}|Evernote>.`;
-        ;(async function main() {
-          // logs {args:{hyper:'card'}}
-          await slackBot.chat.postMessage({channel: 'events', text: shorterMessage});
-        })()
-      });
-
-      evernoteUpdateNote(noteStore, evernoteId, bodyText, documentTitle, googleLink);
-    });
+    evernoteUpdateNote(noteStore, evernoteId, bodyText, documentTitle, googleLink);
   });
 };

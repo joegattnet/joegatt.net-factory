@@ -16,6 +16,7 @@ if (process.env.NODE_ENV !== 'production') {
 export {};
 
 module.exports = (googleDocsId: string, collate: boolean) => {
+  console.log('Running GoogleToEvernote...');
   fs.readFile(CREDENTIALS_PATH, (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     googleDocsAuthorize(JSON.parse(content.toString()), googleToEvernote, { googleDocsId, collate });

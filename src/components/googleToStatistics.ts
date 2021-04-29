@@ -6,13 +6,17 @@
  */
 
 import * as dotenv from 'dotenv';
+
 import { google } from 'googleapis';
- 
+
 dotenv.config();
+
+const commonWordsThreshold = 2000;
+const frequencyThreshold = 3;
 
 const googleDocsParsePlaintext = require('./googleDocsParsePlaintext');
 const { getWordsList } = require('most-common-words-by-language');
-const commonWords = getWordsList('english', 3000);
+const commonWords = getWordsList('english', commonWordsThreshold);
  
 export {};
 
@@ -45,7 +49,7 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
             }
             return stats;
         }, {} );
-        return Object.fromEntries(Object.entries(counts).filter(([,a]) => a > 1).sort(([,a],[,b]) => b - a));
+        return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
     };
 
     const vocabulary = getVocab(bodyText);

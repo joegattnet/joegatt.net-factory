@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "Various services to groom notes",
   "main": "dist/index.js",
+  "keywords": [],
+  "author": "Joe Gatt <joe@joegatt.net>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:joegattnet/joegatt.net-factory.git"
+  },
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
@@ -13,9 +20,6 @@
     "tsc": "tsc",
     "tsc:watch": "tsc --watch"
   },
-  "keywords": [],
-  "author": "Joe Gatt <joe@joegatt.net>",
-  "license": "ISC",
   "dependencies": {
     "chalk": "^4.0.0",
     "dotenv": "^8.2.0",
