@@ -3,13 +3,13 @@ const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
-const slackAppender = require('./slackAppender.js');
+// const slackAppender = require('./slackAppender.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = dev ? 'debug' : 'debug';
-const logAppender = dev ? 'console' : 'slack';
+const logAppender = dev ? 'console' : 'console';
 
 log4js.configure({
   appenders: {
@@ -20,11 +20,11 @@ log4js.configure({
         env: process.env.NODE_ENV,
         app_name: 'joegatt.net-factory'
       }
-    },
-    slack: {
-      type: slackAppender,
-      webhook: process.env.SLACK_WEBHOOK_URL_FACTORY_LOGS,
     }
+    // slack: {
+    //   type: slackAppender,
+    //   webhook: process.env.SLACK_WEBHOOK_URL_FACTORY_LOGS,
+    // }
   },
   categories: {
     default: { appenders: [logAppender], level: loggerLevel }

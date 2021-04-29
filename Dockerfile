@@ -2,6 +2,8 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
+COPY googledocs.*.json ./
+COPY .env ./
 COPY tsconfig.json ./
 RUN npm install
 COPY ./src ./src
@@ -11,6 +13,8 @@ FROM node:8-alpine
 
 WORKDIR /usr/src/app
 COPY package*.json ./
+COPY googledocs.*.json ./
+COPY .env ./
 RUN ls -al
 RUN npm install --only=production
 COPY --from=0 /usr/src/app/dist ./dist
