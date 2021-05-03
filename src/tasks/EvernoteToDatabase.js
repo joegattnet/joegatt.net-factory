@@ -43,13 +43,13 @@ if (process.env.NODE_ENV !== 'production') {
 
  /*****************************************************************************/
 
-const updateNoteFromEvernote = async evernoteId => {
+const EvernoteToDatabase = async evernoteId => {
   const note = await getEvernoteNote(noteStore, evernoteId);
   //  const updateOrCreateNote = () => {
   //  }
   console.log('NOTE =>', note);
 }
 
-const evernoteId = 'c9fb2158-ebf1-480b-a3ff-7bad821bc10b';
+// const evernoteId = 'c9fb2158-ebf1-480b-a3ff-7bad821bc10b';
 
-updateNoteFromEvernote(evernoteId);
+export default EvernoteToDatabase;

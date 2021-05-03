@@ -12,20 +12,18 @@
     <button id="authorize_button" style="display: none;">Authorize</button>
     <button id="signout_button" style="display: none;">Sign Out</button>
     <pre id="content"></pre>
-    
-    <script type="text/javascript">
-    //  Generate these from https://console.developers.google.com/?authuser=0&project=joegattnet-facto-1597073934683
 
+    <script type="text/javascript">
     // Client ID and API key from the Developer Console
-      var CLIENT_ID = '170282168370-l2pbphmq26p58lqgqv8k7ak0vg2o7kg3.apps.googleusercontent.com';
-      var API_KEY = 'kopX4ypmrs138kmouxhq1-Ew';
+    var CLIENT_ID = '170282168370-1cp5tokvhv8oa9m4urbfvsbc0v4qpik5.apps.googleusercontent.com';
+      var API_KEY = 'AIzaSyCPMSFyNJiYbtCD9D92fW5EBLb1EgpQciU';
 
       // Array of API discovery doc URLs for APIs used by the quickstart
       var DISCOVERY_DOCS = ['https://docs.googleapis.com/$discovery/rest?version=v1'];
 
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
-      var SCOPES = "https://www.googleapis.com/auth/documents,https://www.googleapis.com/auth/drive";
+      var SCOPES = "https://www.googleapis.com/auth/drive";
 
       var authorizeButton = document.getElementById('authorize_button');
       var signoutButton = document.getElementById('signout_button');
@@ -101,11 +99,11 @@
 
       /**
        * Prints the title of a sample doc:
-       * https://docs.google.com/document/d/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/edit
+       * https://docs.google.com/document/d/195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE/edit
        */
       function printDocTitle() {
         gapi.client.docs.documents.get({
-        documentId: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+        documentId: '195j9eDD3ccgjQRttHhJPymLJUCOUjs-jmwTrekvdjFE'
       }).then(function(response) {
         var doc = response.result;
         var title = doc.title;

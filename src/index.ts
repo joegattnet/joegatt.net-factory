@@ -34,7 +34,27 @@ app.get('/', ( req, res ) => {
   res.send( "Hello world!" );
 });
 
-app.get('/googleDocUpdated', (req, res) => {
+app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
+  if (req.query.guid) {
+    // googleToEvernote(req.query.guid);
+    res.status(202).send('Accepted');
+  } else {
+    res.status(403).send('Bad request');
+  }
+});
+
+// Deprecated
+app.get('/webhooks/evernote_note', (req, res) => {
+  if (req.query) {
+    // googleToEvernote(req.query.guid);
+    console.log('EVERNOTE: ', req.query)
+    res.status(202).send('Accepted');
+  } else {
+    res.status(403).send('Bad request');
+  }
+});
+
+app.get('/webhooks/googleDocUpdated', (req, res) => {
   if (req.query.googleDocsId) {
     googleToEvernote(req.query.googleDocsId);
     res.status(202).send('Accepted');
