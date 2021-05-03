@@ -35,19 +35,9 @@ app.get('/', ( req, res ) => {
 });
 
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
-  if (req.query.guid) {
+  console.log(req.query);
+  if (req.query.notebookGuid) {
     // googleToEvernote(req.query.guid);
-    res.status(202).send('Accepted');
-  } else {
-    res.status(403).send('Bad request');
-  }
-});
-
-// Deprecated
-app.get('/webhooks/evernote_note', (req, res) => {
-  if (req.query) {
-    // googleToEvernote(req.query.guid);
-    console.log('EVERNOTE: ', req.query)
     res.status(202).send('Accepted');
   } else {
     res.status(403).send('Bad request');
@@ -70,6 +60,10 @@ app.get('/stats', (req, res) => {
   } else {
     res.status(403).send('Bad request');
   }
+});
+
+app.use(function(req, res, next) {
+  res.status(404).send('404: File Not Found');
 });
 
 app.listen(port, () => {

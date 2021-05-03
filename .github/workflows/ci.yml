@@ -25,15 +25,5 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa_deploykey_unsigned
           git pull
-          npm ci
-          tsc
-          echo "Restarting joegatt.net-factory server:"
-          ps aux | grep " node " | grep -v grep
-          nodepids=$(ps aux | grep " node " | grep -v grep | cut -c10-15)
-          for nodepid in ${nodepids[@]}
-          do
-          echo "Stopping PID :"$nodepid
-          kill -9 $nodepid
-          node .
-          done
-          echo "Done."
+          cd ..
+          docker-compose -f docker-compose-prod.yml up -d --build factory
