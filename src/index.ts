@@ -1,3 +1,4 @@
+import { error } from 'console';
 import express from 'express';
 const port = 80;
 
@@ -9,6 +10,11 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = dev ? 'debug' : 'debug';
 const logAppender = dev ? 'console' : 'console';
+const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
+
+if (!evernoteNotebooks) {
+  throw new Error('ERROR: EVERNOTE_NOTEBOOKS as environment variable is missing!');
+}
 
 log4js.configure({
   appenders: {
@@ -36,9 +42,11 @@ app.get('/', ( req, res ) => {
 
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
   console.log(req.query);
-  if (req.query.notebookGuid) {
-    // googleToEvernote(req.query.guid);
+  if (req.query.guid && req.query.notebookGuid) {
     res.status(202).send('Accepted');
+    if (req.query.reason === 'update' && evernoteNotebooks.includes(req.query.notebookGuid.toString())) {
+    // googleToEvernote(req.query.guid);
+    }
   } else {
     res.status(403).send('Bad request');
   }
@@ -46,19 +54,19 @@ app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
 
 app.get('/webhooks/googleDocUpdated', (req, res) => {
   if (req.query.googleDocsId) {
+    res.status(202).send('202: Accepted');
     googleToEvernote(req.query.googleDocsId);
-    res.status(202).send('Accepted');
   } else {
-    res.status(403).send('Bad request');
+    res.status(403).send('403: Bad request');
   }
 });
 
 app.get('/stats', (req, res) => {
   if (req.query.googleDocsId) {
-    googleToStatistics(req.query.googleDocsId);
     res.status(202).send('Accepted');
+    googleToStatistics(req.query.googleDocsId);
   } else {
-    res.status(403).send('Bad request');
+    res.status(403).send('403: Bad request');
   }
 });
 
