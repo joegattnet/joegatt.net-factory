@@ -4,6 +4,7 @@ const port = 80;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
+const googleToStanza = require('./tasks/GoogleToStanza.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
@@ -40,6 +41,24 @@ app.get('/', ( req, res ) => {
   res.send( "Hello world!" );
 });
 
+app.get('/stanza', (req, res) => {
+  if (req.query.googleDocsId) {
+    res.status(202).send('Accepted');
+    googleToStanza(req.query.googleDocsId);
+  } else {
+    res.status(403).send('Bad request');
+  }
+});
+
+app.get('/stats', (req, res) => {
+  if (req.query.googleDocsId) {
+    res.status(202).send('Accepted');
+    googleToStatistics(req.query.googleDocsId);
+  } else {
+    res.status(403).send('Bad request');
+  }
+});
+
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
   console.log(req.query);
   if (req.query.guid && req.query.notebookGuid) {
@@ -57,16 +76,7 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
     res.status(202).send('202: Accepted');
     googleToEvernote(req.query.googleDocsId);
   } else {
-    res.status(403).send('403: Bad request');
-  }
-});
-
-app.get('/stats', (req, res) => {
-  if (req.query.googleDocsId) {
-    res.status(202).send('Accepted');
-    googleToStatistics(req.query.googleDocsId);
-  } else {
-    res.status(403).send('403: Bad request');
+    res.status(403).send('Bad request');
   }
 });
 
