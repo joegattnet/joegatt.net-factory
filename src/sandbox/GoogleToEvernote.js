@@ -149,53 +149,59 @@ const formatBodyFromGoogleDoc = data => {
   return textString.replace(/\n\n\n\t/gm, '\n\n\n');
 }
 
+// const collatedMAStandard = '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4';
+const collatedMASKindle = '1Dsb78PrKDts3OqST-VHWhQgy1_rc-8bDm7nMxjNZl28';
+const collatedMA = collatedMASKindle;
+
+const collatedKill = '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk';
+
 let chapters = [
   {
-    evernoteId: '4d6bf3b8-0c94-44f1-a1fb-c0e37faf4213',
-    googleDocumentId: '1mhAQIzBflcx_jxIejYOrfWWgEnjCD6Kpa9eTxFTFdF0',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
-    name: 'Example',
+    googleDocumentId: '1yFpKArgb2-uJCzMIrAiXUup6_kSCZL32ZHCb3EcM5TM',
+    googleDocumentIdNoAnnotations: collatedMA,
+    evernoteId: 'ecca7ac7-168f-fd7f-b391-3d96ff80222a',
+    name: 'Chapter 0',
   },
   {
     googleDocumentId: '1Hw83EEy5rPZXhpWHAvZTS4rPOU7Evyyr1lWwOHB_Y2M',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: 'bdaab182-b0fd-4341-b14c-caccf1398e75',
     name: 'Chapter 1',
   }, 
   {
     googleDocumentId: '17dBUrOnwO-4c6QQM9UyfiUI1CBfV0jPPB1aQn9sbMt4',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: 'b294b6a5-a561-465a-85b7-8a692b21225e',
     name: 'Chapter 2',
   },
   {
     googleDocumentId: '1j0j8EHzrk06cadp56yyLgBJ1gbJ54_DWPdcVJV2GWi8',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: '4d7f9c6d-287a-4847-9cfd-1b4fda7c3a41',
     name: 'Chapter 3',
   },
   {
     evernoteId: '3c596fe9-d166-4c69-bc9a-ca5ec1cb9888',
     googleDocumentId: '13LhjdMQiQvQJfqy9EhcIICp5Zmp06hnjqRoDCC1shNI',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     name: 'Chapter 4',
   },
   {
     googleDocumentId: '1BsLoH3GnAWUMss04IcTxPQZkbv0suV3zuYg5r7ZHXgY',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: 'c967e410-ebdb-4de8-aade-9f7b683e83e7',
     name: 'Chapter 5'
   },
   { 
     name: 'Chapter 6',
     googleDocumentId:'1BMepUF3b2Gf7SsLsj7fODc-Omb-fdYMntxvezIe_A_U',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: '0a56703b-f884-4a13-901d-a4cb81d55c90' 
   },
   { 
     name: 'Chapter 7',
     googleDocumentId:'1Y1gEufUswFM5qtNP_htIRij9io7l0Y823Sxc_g1S6uE',
-    googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+    googleDocumentIdNoAnnotations: collatedMA,
     evernoteId: 'e011937f-ca8f-4fc5-8ed4-ecc937f83dc4' 
   }
 ];
@@ -203,30 +209,52 @@ let chapters = [
 chapters[100] = {
   googleDocumentId: '1y49ohNV8tMnHl07Esuw2kgiCXqidmXbTbe3sGGqwSmg',
   // googleDocumentIdNoAnnotations: '1FKZIfZabCPdksBFFVhxS9M1CRBXf44c57YkCS7-ezh8',
-  googleDocumentIdNoAnnotations: '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk',
+  googleDocumentIdNoAnnotations: collatedKill,
   evernoteId: 'b199d513-5d44-433c-af67-d85256456582',
-  name: 'Qatel 0'
+  name: 'Afterword'
 };
 
 chapters[101] = {
   googleDocumentId: '1cPOzhm-0FfryD5uJQ_RBMYNIKr7QYVpj-6K28I6WCHE',
-  googleDocumentIdNoAnnotations: '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk',
+  googleDocumentIdNoAnnotations: collatedKill,
   evernoteId: '32c57cc6-2763-4e05-8db6-e9b417e98c23',
-  name: 'Qatel 1'
+  name: 'Manometer'
 };
 
 chapters[102] = {
   googleDocumentId: '1JYDHsmJyIZ-WXj7xceP0ZimBJ62s4KHHz_Ed44SQCYE',
-  googleDocumentIdNoAnnotations: '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk',
+  googleDocumentIdNoAnnotations: collatedKill,
   evernoteId: '71c4f3c5-84b7-479a-a9f1-f1420b291326',
-  name: 'Qatel 2'
+  name: 'Under the Sun'
 };
 
 chapters[103] = {
   googleDocumentId: '14_fso6pJmMHE1nTFBkq9MuzeGRt9kH5dfIiz1eBCtvw',
-  googleDocumentIdNoAnnotations: '1yBXGV2iOmf4P2BF7B9HtiBYLFlwDsKx5Q4bY1XXMHYk',
+  googleDocumentIdNoAnnotations: collatedKill,
   evernoteId: 'ef60f921-d339-4dc2-8e2b-9b724ea79f26',
-  name: 'Qatel 3'
+  name: 'A Mouth Like Yours'
+};
+
+chapters[104] = {
+  googleDocumentId: '1mbfoh9HQgbvBbKJVlAQhFFSQSCuwYdTwTU08JYFNWYY',
+  googleDocumentIdNoAnnotations: collatedKill,
+  evernoteId: '17b71a08-ae91-45ad-aa1d-6ad6ad6ad2b7',
+  name: 'Skeuomorph'
+};
+
+chapters[105] = {
+  googleDocumentId: '1J8dGBJrB1Bxb_vXCPgcqCZ4THyMZPsk1JCuHTuAa5YA',
+  googleDocumentIdNoAnnotations: collatedKill,
+  evernoteId: '153476c2-c563-4990-b824-bae1336cf6ba',
+  name: 'The Fragment on Machines'
+};
+
+
+chapters[106] = {
+  googleDocumentId: '1GTr8cT3WBKKGVL943dyoAyA9i900eeI7qGPIQoRCvPE',
+  googleDocumentIdNoAnnotations: collatedKill,
+  evernoteId: '245ee8fa-bb02-488c-95d8-42d9a46a2171',
+  name: 'Rapture of the Deep'
 };
 
 chapters[1001] = {
@@ -235,6 +263,14 @@ chapters[1001] = {
   evernoteId: '30f3a555-f983-4089-9e90-a1c876f9818b',
   name: 'Political 1'
 };
+
+chapters[9999] = {
+  evernoteId: '4d6bf3b8-0c94-44f1-a1fb-c0e37faf4213',
+  googleDocumentId: '1mhAQIzBflcx_jxIejYOrfWWgEnjCD6Kpa9eTxFTFdF0',
+  googleDocumentIdNoAnnotations: '1TUu2WDm8_WR194h3Uu4rTTlJOzrO26gXy4HPh9Hekd4',
+  name: 'Example',
+};
+
 
 /**
  * Prints the title of a sample doc:
