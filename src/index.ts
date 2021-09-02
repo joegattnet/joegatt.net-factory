@@ -6,6 +6,7 @@ const googleToEvernote = require('./tasks/GoogleToEvernote.js');
 const googleToStatistics = require('./tasks/GoogleToStatistics.js');
 const googleToStanza = require('./tasks/GoogleToStanza.js');
 const pingDatabase = require('./tasks/PingDatabase.js');
+const pingTypescript = require('./tasks/PingTypescript.js');
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
@@ -69,6 +70,17 @@ app.get('/pings/database', (req, res) => {
   // } else {
   //   res.status(424).send('Database query failed');
   // }
+});
+
+
+app.get('/pings/typescript', (req, res) => {
+  const response = pingTypescript();
+  res.status(200).send(response);
+  if (response === 'Ping Typescript OK') {
+    res.status(200).send(response);
+  } else {
+    res.status(424).send('Typescript failed');
+  }
 });
 
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {

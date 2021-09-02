@@ -12,14 +12,14 @@ const selectNoteSql = `
   LIMIT 1
 `;
 
-const fetchNotes = async () => {
+const fetchNote = async () => {
   const results = await client.query(selectNoteSql);
   return results.rows;
 };
 
 const pingDatabase = async () => {
   try {
-    const note = await fetchNotes();
+    const note = await fetchNote();
     return note;
   } catch (error) {
     console.log('Query failed.');
