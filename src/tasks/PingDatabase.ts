@@ -29,4 +29,4 @@ const pingDatabase = async () => {
   process.exit();
 };
 
-module.exports = { pingDatabase };
+module.exports = pingDatabase;

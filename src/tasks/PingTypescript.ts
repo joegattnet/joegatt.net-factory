@@ -4,4 +4,4 @@ const pingTypescript = () => {
   return 'Ping Typescript OK';
 };
 
-module.exports = { pingTypescript };
+module.exports = pingTypescript;

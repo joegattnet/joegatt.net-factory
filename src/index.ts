@@ -84,15 +84,12 @@ app.get('/pings/typescript', (req, res) => {
 });
 
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
-  console.log(req.query);
-  if (req.query.guid && req.query.notebookGuid) {
-    res.status(202).send('Accepted');
-    if (req.query.reason === 'update' && evernoteNotebooks.includes(req.query.notebookGuid.toString())) {
-    // googleToEvernote(req.query.guid);
-    }
-  } else {
-    res.status(403).send('Bad request');
-  }
+  if (!req.query.guid || !req.query.notebookGuid)
+    return res.status(403).send('Bad request');
+  if (req.query.reason !== 'update' || !evernoteNotebooks.includes(req.query.notebookGuid.toString()))
+    return res.status(422).send('Unprocessable entity');
+  res.status(202).send('Accepted');
+  // googleToEvernote(req.query.guid);
 });
 
 app.get('/webhooks/googleDocUpdated', (req, res) => {
