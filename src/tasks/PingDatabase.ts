@@ -7,7 +7,7 @@ const client = new Client(config.DB_CONNECTION);
 client.connect();
 
 const selectNoteSql = `
-  SELECT *
+  SELECT id
   FROM notes
   LIMIT 1
 `;
@@ -20,7 +20,7 @@ const fetchNote = async () => {
 const pingDatabase = async () => {
   try {
     const note = await fetchNote();
-    return note;
+    return note.id;
   } catch (error) {
     console.log('Query failed.');
   }
