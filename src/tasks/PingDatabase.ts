@@ -20,7 +20,7 @@ const fetchNote = async () => {
 const pingDatabase = async () => {
   try {
     const note = await fetchNote();
-    return note.toString();
+    return note;
   } catch (error) {
     console.log('Query failed.');
   }

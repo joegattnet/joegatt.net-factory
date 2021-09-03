@@ -63,7 +63,7 @@ app.get('/stats', (req, res) => {
 
 app.get('/pings/database', (req, res) => {
   const response = pingDatabase();
-  res.status(200).send(response);
+  res.status(200).send(response.toString());
   // if (req.query.googleDocsId) {
   //   res.status(200).send(response);
   //   googleToStatistics(req.query.googleDocsId);
@@ -75,12 +75,9 @@ app.get('/pings/database', (req, res) => {
 
 app.get('/pings/typescript', (req, res) => {
   const response = pingTypescript();
-  res.status(200).send(response);
-  if (response === 'Ping Typescript OK') {
+  if (response === 'Ping Typescript OK')
     res.status(200).send(response);
-  } else {
-    res.status(424).send('Typescript failed');
-  }
+  res.status(424).send('Typescript failed');
 });
 
 app.get('/webhooks/evernoteNoteUpdated', (req, res) => {
