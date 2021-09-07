@@ -53,11 +53,12 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
   };
 
-  getDocumentData(params.googleDocsId).then((documentData: any) => {
-    const bodyText = googleDocsParsePlaintext(documentData);
-    const vocabulary = getVocab(bodyText);
-    console.table(vocabulary);
-    return vocabulary;
-  });
+  getDocumentData(params.googleDocsId);
+  // getDocumentData(params.googleDocsId).then((documentData: any) => {
+  //   const bodyText = googleDocsParsePlaintext(documentData);
+  //   const vocabulary = getVocab(bodyText);
+  //   console.table(vocabulary);
+  //   return vocabulary;
+  // });
   // const documentTitle = documentData.title || 'Untitled';
 };
