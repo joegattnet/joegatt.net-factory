@@ -21,10 +21,10 @@ const commonWords = getWordsList('english', commonWordsThreshold);
 
 export {};
 
-module.exports = (auth: string, params: GoogleDocsParams) => {
+module.exports = async (auth: string, params: GoogleDocsParams) => {
   const docs = google.docs({version: 'v1', auth});
 
-  const getDocumentData = (googleDocsId: string): any => {
+  const getDocumentData = async (googleDocsId: string): Promise<any> => {
     return docs.documents.get({
       documentId: googleDocsId
     }, (err: any, res: any) => {
@@ -54,12 +54,10 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
   };
 
-  getDocumentData(params.googleDocsId);
-  // getDocumentData(params.googleDocsId).then((documentData: any) => {
-  //   const bodyText = googleDocsParsePlaintext(documentData);
-  //   const vocabulary = getVocab(bodyText);
-  //   console.table(vocabulary);
-  //   return vocabulary;
-  // });
+  const documentData = await getDocumentData(params.googleDocsId);
+  const bodyText = googleDocsParsePlaintext(documentData);
+  const vocabulary = getVocab(bodyText);
+  console.table(vocabulary);
+  return vocabulary;
   // const documentTitle = documentData.title || 'Untitled';
 };
