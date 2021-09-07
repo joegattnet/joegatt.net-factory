@@ -12,6 +12,6 @@ module.exports = (googleDocsId: string) => {
   // console.log('Running GoogleToStatistics...');
   fs.readFile(CREDENTIALS_PATH, (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
-    googleDocsAuthorize(JSON.parse(content.toString()), googleToStatistics, { googleDocsId });
+    return googleDocsAuthorize(JSON.parse(content.toString()), googleToStatistics, { googleDocsId });
   });
 }
