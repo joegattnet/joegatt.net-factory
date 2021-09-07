@@ -26,10 +26,12 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
 
   const getDocumentData = (googleDocsId: string): any => {
     return docs.documents.get({
-      documentId: googleDocsId,
+      documentId: googleDocsId
     }, (err: any, res: any) => {
       if (err) return console.error('The API returned an error: ' + err);
       if (!res || !res.data) return console.error('Response is empty!');
+      const documentTitle = res.data.title || 'Untitled';
+      console.log(documentTitle);
       return res.data;
     }
   )};
