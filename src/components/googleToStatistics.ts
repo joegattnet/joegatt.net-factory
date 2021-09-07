@@ -24,8 +24,8 @@ export {};
 module.exports = (auth: string, params: GoogleDocsParams) => {
   const docs = google.docs({version: 'v1', auth});
 
-  const getDocumentData = (googleDocsId: string) => {
-    docs.documents.get({
+  const getDocumentData = (googleDocsId: string): any => {
+    return docs.documents.get({
       documentId: googleDocsId,
     }, (err: any, res: any) => {
       if (err) return console.error('The API returned an error: ' + err);
