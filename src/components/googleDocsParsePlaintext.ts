@@ -6,6 +6,7 @@
 export {};
 
 module.exports = (data: any): string => {
+  console.log(data);
   const textArray = data.body.content.map((chunk: ContentChunk) => {
     if (!chunk.paragraph) return null;
     switch (chunk.paragraph.paragraphStyle.namedStyleType) {

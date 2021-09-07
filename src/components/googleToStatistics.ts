@@ -30,7 +30,7 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     }, (err: any, res: any) => {
       if (err) return console.error('The API returned an error: ' + err);
       if (!res || !res.data) return console.error('Response is empty!');
-      return res;
+      return res.data;
     }
   )};
 
