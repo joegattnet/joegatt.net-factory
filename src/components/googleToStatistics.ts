@@ -17,7 +17,7 @@ const frequencyThreshold = 3;
 const googleDocsParsePlaintext = require('./googleDocsParsePlaintext');
 const { getWordsList } = require('most-common-words-by-language');
 const commonWords = getWordsList('english', commonWordsThreshold);
- 
+
 export {};
 
 module.exports = (auth: string, params: GoogleDocsParams) => {
@@ -52,8 +52,8 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
         return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
     };
 
-    const vocabulary = getVocab(bodyText);
+    return getVocab(bodyText);
 
-    console.table(vocabulary);
+    // console.table(vocabulary);
   });
 };

@@ -54,8 +54,8 @@ app.get('/stanza', (req, res) => {
 
 app.get('/stats', (req, res) => {
   if (req.query.googleDocsId) {
-    res.status(202).send('Accepted');
-    googleToStatistics(req.query.googleDocsId);
+    const vocabulary = googleToStatistics(req.query.googleDocsId);
+    res.status(200).send(vocabulary.toString());
   } else {
     res.status(403).send('Bad request');
   }
