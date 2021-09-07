@@ -30,9 +30,7 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     }, (err: any, res: any) => {
       if (err) return console.error('The API returned an error: ' + err);
       if (!res || !res.data) return console.error('Response is empty!');
-      console.log('>>>>>>>>>>>>>>>', res.data);
-      // return res.data;
-      return 'YYYYYYYYYYYYYYYYYY';
+      return res.data;
     }
   )};
 
@@ -53,10 +51,11 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
     return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
   };
 
-  const documentData = getDocumentData(params.googleDocsId);
+  getDocumentData(params.googleDocsId).then((documentData: any) => {
+    const bodyText = googleDocsParsePlaintext(documentData);
+    const vocabulary = getVocab(bodyText);
+    console.table(vocabulary);
+    return vocabulary;
+  });
   // const documentTitle = documentData.title || 'Untitled';
-  const bodyText = googleDocsParsePlaintext(documentData);
-  const vocabulary = getVocab(bodyText);
-  console.table(vocabulary);
-  return vocabulary;
 };
