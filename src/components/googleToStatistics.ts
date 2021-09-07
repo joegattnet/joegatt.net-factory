@@ -32,6 +32,7 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
       if (!res || !res.data) return console.error('Response is empty!');
       const documentTitle = res.data.title || 'Untitled';
       console.log(documentTitle);
+      console.log(res.data);
       return res.data;
     }
   )};
