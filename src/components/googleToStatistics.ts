@@ -52,8 +52,9 @@ module.exports = (auth: string, params: GoogleDocsParams) => {
         return Object.fromEntries(Object.entries(counts).filter(([,a]) => a >= frequencyThreshold).sort(([,a],[,b]) => b - a));
     };
 
-    return getVocab(bodyText);
+    const vocabulary = getVocab(bodyText);
+    console.table(vocabulary);
+    return vocabulary;
 
-    // console.table(vocabulary);
   });
 };
