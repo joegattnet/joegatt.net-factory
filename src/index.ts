@@ -53,12 +53,9 @@ app.get('/stanza', (req, res) => {
 });
 
 app.get('/stats', (req, res) => {
-  if (req.query.googleDocsId) {
-    const vocabulary = googleToStatistics(req.query.googleDocsId);
-    res.status(200).send(vocabulary);
-  } else {
-    res.status(403).send('Bad request');
-  }
+  if (req.query.googleDocsId)
+    return res.status(200).send(googleToStatistics(req.query.googleDocsId));
+  res.status(403).send('Bad request');
 });
 
 app.get('/pings/database', (req, res) => {
@@ -76,7 +73,7 @@ app.get('/pings/database', (req, res) => {
 app.get('/pings/typescript', (req, res) => {
   const response = pingTypescript();
   if (response === 'Ping Typescript OK')
-    res.status(200).send(response);
+    return res.status(200).send(response);
   res.status(424).send('Typescript failed');
 });
 
