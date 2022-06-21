@@ -17,5 +17,5 @@ COPY googledocs.*.json ./
 COPY .env ./
 RUN npm install --only=production
 COPY --from=0 /usr/src/app/dist ./dist
-EXPOSE 80
+EXPOSE 443
 CMD npm start
