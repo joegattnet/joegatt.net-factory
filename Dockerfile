@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12-alpine AS builder
 
 WORKDIR /usr/src/app
 COPY package*.json ./
@@ -16,6 +16,6 @@ COPY package*.json ./
 COPY googledocs.*.json ./
 COPY .env ./
 RUN npm install --only=production
-COPY --from=0 /usr/src/app/dist ./dist
+COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 443
-CMD npm start
+CMD ["npm", "start"]
