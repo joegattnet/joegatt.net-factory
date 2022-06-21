@@ -25,5 +25,7 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa_deploykey_unsigned
           git pull
+          npm ci
+          tsc
           cd ..
           docker-compose -f docker-compose-prod.yml up -d --build factory
