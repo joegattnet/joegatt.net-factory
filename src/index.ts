@@ -13,8 +13,7 @@ const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = dev ? 'debug' : 'debug';
 const logAppender = dev ? 'console' : 'console';
-const evernoteNotebooks = ['a', 'b'];
-// const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
+const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 
 if (!evernoteNotebooks) {
   throw new Error('ERROR: EVERNOTE_NOTEBOOKS as environment variable is missing!');
