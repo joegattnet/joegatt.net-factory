@@ -81,6 +81,6 @@
     "stylelint-config-prettier": "^8.0.2",
     "ts-jest": "^26.1.0",
     "tsc-watch": "^4.2.8",
-    "typescript": "^3.9.3"
+    "typescript": "^3.9.10"
   }
 }
