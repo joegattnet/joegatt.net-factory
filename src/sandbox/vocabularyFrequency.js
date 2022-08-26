@@ -1,14 +1,13 @@
 const { clean } = require("./clean");
-const { count } = require("./count");
+const { frequency } = require("./frequency");
 
 var textract = require("textract");
 
-const filePath = "Heart of a Heartless World v7-03.odt";
+const filePath = "Heart of a Heartless World v8-0.odt";
 
 textract.fromFileWithPath(filePath, (error, text) => {
   if (error) return console.log(error);
-  const cleanedContent = clean(text);
-  const result = count(cleanedContent);
+  const result = frequency(cleanedContent);
   result.forEach((item) =>
     console.log(
       `"${item.word}","${item.count}","${item.common}","${item.examples

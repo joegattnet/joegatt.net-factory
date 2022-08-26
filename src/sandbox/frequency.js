@@ -7,7 +7,7 @@ var commonestWords = getWordsList("english", 20000);
 // lemma
 const lemmatize = require("extract-lemmatized-nonstop-words");
 
-exports.count = (string) => {
+exports.frequency = (string) => {
   let map = new Map();
   const words = string.split(" ").filter((word) => word !== "");
 
@@ -15,14 +15,14 @@ exports.count = (string) => {
     const item = words[i].replace(/'[\p{L}]+/gu, "");
     // const lemma = stemmer.stem(item);
     const lemma = (lemmatize(item).length && lemmatize(item)[0].lemma) || item;
-    let count = (map.get(lemma) && map.get(lemma).count + 1) || 1;
+    let frequency = (map.get(lemma) && map.get(lemma).count + 1) || 1;
     let examplesArray = (map.get(lemma) && map.get(lemma).examples) || [];
     let examples = examplesArray.includes(item)
       ? examplesArray
       : [...examplesArray, item];
     map.set(lemma, {
       word: lemma,
-      count,
+      frequency,
       examples,
       common: commonestWords.indexOf(item),
     });
