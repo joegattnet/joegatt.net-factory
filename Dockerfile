@@ -8,9 +8,7 @@ COPY tsconfig.json ./
 RUN npm install
 COPY ./src ./src
 RUN npm run build
-EXPOSE 80
-EXPOSE 8080
-EXPOSE 443
+EXPOSE 3000
 
 FROM node:12-alpine
 
@@ -20,7 +18,5 @@ COPY googledocs.*.json ./
 COPY .env ./
 RUN npm install --only=production
 COPY --from=builder /usr/src/app/dist ./dist
-EXPOSE 80
-EXPOSE 8080
-EXPOSE 443
+EXPOSE 3000
 CMD ["npm", "start"]
