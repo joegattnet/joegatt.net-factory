@@ -8,6 +8,8 @@ const googleToStanza = require('./tasks/GoogleToStanza.js');
 const pingDatabase = require('./tasks/PingDatabase.js');
 const pingTypescript = require('./tasks/PingTypescript.js');
 
+const updateAllCitations = require('./updateAll.js');
+
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
 const logger = log4js.getLogger();
@@ -93,6 +95,13 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
   } else {
     res.status(403).send('Bad request');
   }
+});
+
+app.get('/webhooks/updateAllCitations', (req, res) => {
+  const response = updateAllCitations();
+  if (response === 'Ping Typescript OK')
+    return res.status(200).send(response);
+  res.status(424).send('Typescript failed');
 });
 
 app.use(function(req, res, next) {
