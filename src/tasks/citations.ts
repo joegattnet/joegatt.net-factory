@@ -28,10 +28,11 @@ const selectCitationsSql = `
 `;
 
 const updateCitationSql = `
-  UPDATE notes 
+  UPDATE notes
   SET cached_url = $2,
     cached_blurb_html = $3,
     cached_body_html = $4,
+    cached_source_html = '<div>IS THIS NECESSARY?</div>',
     groomed_at = NOW()
   WHERE id = $1
 `;
