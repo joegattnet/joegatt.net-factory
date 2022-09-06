@@ -5,6 +5,10 @@ var textract = require("textract");
 const filePath =
   "/home/joegatt/Documents/Work/Heart of a Heartless World/Heart of a Heartless World v10.odt";
 
+console.log(
+  '"sequence",	"word 1",	"word 2",	"EN occurrence",	"distance",	"context"'
+);
+
 textract.fromFileWithPath(filePath, (error, text) => {
   if (error) return console.log(error);
   const result = recency(text);

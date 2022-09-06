@@ -15,7 +15,7 @@ exports.recency = (text) => {
   let candidates = new Array();
 
   // REFACTOR make this a function with clean? flag
-  const words = text
+  const dirtyContent = text
     .replace(/[^\p{L}']+/gu, " ")
     .trim()
     .split(" ")
@@ -46,7 +46,7 @@ exports.recency = (text) => {
     ) {
       sortedArray[i].push(sortedArray[i][0] - sortedArray[i - 1][0]);
       sortedArray[i].push(
-        cleanedWords
+        dirtyContent
           .slice(sortedArray[i - 1][0] - 10, sortedArray[i][0] + 10)
           .join(" ")
           .replace(` ${sortedArray[i - 1][2]} `, ` *${sortedArray[i - 1][2]}* `)
