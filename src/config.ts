@@ -4,7 +4,7 @@ module.exports = {
   BLURB_LENGTH: 50,
   DB_CONNECTION: {
     user: "deployer",
-    host: "172.20.0.2",
+    host: "postgres",
     database: "joegattnet", // THESE SHOULDN'T BE HARDCODED!
     password: "itTieni10",
     port: 5432,

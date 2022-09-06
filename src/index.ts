@@ -99,9 +99,9 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
 
 app.get('/webhooks/updateAllCitations', (req, res) => {
   const response = updateAllCitations();
-  if (response === 'Ping Typescript OK')
+  if (response === 'Updated OK')
     return res.status(200).send(response);
-  res.status(424).send('Typescript failed');
+  res.status(424).send('Error!');
 });
 
 app.use(function(req, res, next) {
