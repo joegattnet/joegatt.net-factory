@@ -55,13 +55,13 @@ const formatText = (note: Note) => {
     .join("");
   text = `<section>${text}</section>`;
 
-  const replacements = {
-    nestedAnnotations: {
-      name: "Fix nested annotations",
-      find: new RegExp(/(\[[^\]]*)\[([^\]]*)\]([^\[]*\])/, "gm"),
-      replace: "$1$3",
-    },
-  };
+  // const replacements = {
+  //   nestedAnnotations: {
+  //     name: "Fix nested annotations",
+  //     find: new RegExp(/(\[[^\]]*)\[([^\]]*)\]([^\[]*\])/, "gm"),
+  //     replace: "$1$3",
+  //   },
+  // };
 
   // ANNOTATIONS
   const annotationPattern = new RegExp(/\s*( *\[)([^\.].*? .*?)(\])/, "gm");
