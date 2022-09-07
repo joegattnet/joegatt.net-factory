@@ -13,10 +13,10 @@ const { updateAllTexts } = require("./tasks/texts");
 
 const dev = process.env.NODE_ENV !== 'production';
 const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
-// const log4js = require('log4js');
-// const logger = log4js.getLogger();
-// const loggerLevel = dev ? 'debug' : 'debug';
-// const logAppender = dev ? 'console' : 'console';
+const log4js = require('log4js');
+const logger = log4js.getLogger();
+const loggerLevel = dev ? 'debug' : 'debug';
+const logAppender = dev ? 'console' : 'console';
 
 const asyncHandler = (func: any) => (req: Request, res: Response, next: any) => {
   Promise.resolve(func(req, res, next))
@@ -27,25 +27,25 @@ if (!evernoteNotebooks) {
   throw new Error('ERROR: EVERNOTE_NOTEBOOKS as environment variable is missing!');
 }
 
-// log4js.configure({
-//   appenders: {
-//     console: {
-//       app: 'joegatt.net-factory',
-//       type: 'stdout',
-//       fields: {
-//         env: process.env.NODE_ENV,
-//         app_name: 'joegatt.net-factory'
-//       }
-//     }
-//   },
-//   categories: {
-//     default: { appenders: [logAppender], level: loggerLevel }
-//   }
-// });
+log4js.configure({
+  appenders: {
+    console: {
+      app: 'joegatt.net-factory',
+      type: 'stdout',
+      fields: {
+        env: process.env.NODE_ENV,
+        app_name: 'joegatt.net-factory'
+      }
+    }
+  },
+  categories: {
+    default: { appenders: [logAppender], level: loggerLevel }
+  }
+});
 
 const app = express();
 
-// app.use(log4js.connectLogger(logger, { level: loggerLevel }));
+app.use(log4js.connectLogger(logger, { level: loggerLevel }));
 
 app.get('/', ( req, res ) => {
   res.send("Hello world!");
