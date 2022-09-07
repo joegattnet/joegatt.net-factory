@@ -1,4 +1,3 @@
-import { error } from 'console';
 import express from 'express';
 import { Request, Response, } from 'express';
 const port = 3000;
@@ -13,11 +12,11 @@ const { updateAllCitations } = require("./tasks/citations");
 const { updateAllTexts } = require("./tasks/texts");
 
 const dev = process.env.NODE_ENV !== 'production';
+const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = dev ? 'debug' : 'debug';
 const logAppender = dev ? 'console' : 'console';
-const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 
 const asyncHandler = (func: any) => (req: Request, res: Response, next: any) => {
   Promise.resolve(func(req, res, next))
@@ -113,16 +112,16 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
 
 app.get('/webhooks/updateAllCitations', (req, res) => {
   const response = updateAllCitations();
-  if (response.include('updated'))
+  if (response.includes('updated'))
     return res.status(200).send(response);
-  res.status(424).send('Error!');
+  res.status(424).send(response);
 });
 
 app.get('/webhooks/updateAllTexts', (req, res) => {
   const response = updateAllTexts();
-  if (response.include('updated'))
+  if (response.includes('updated'))
     return res.status(200).send(response);
-  res.status(424).send('Error!');
+  res.status(424).send(response);
 });
 
 app.use(function(req, res, next) {
