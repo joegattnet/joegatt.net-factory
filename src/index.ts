@@ -9,7 +9,8 @@ const googleToStanza = require('./tasks/GoogleToStanza.js');
 const pingDatabase = require('./tasks/PingDatabase.js');
 const pingTypescript = require('./tasks/PingTypescript.js');
 
-const updateAllCitations = require('./updateAll.js');
+const { updateAllCitations } = require("./tasks/citations");
+const { updateAllTexts } = require("./tasks/texts");
 
 const dev = process.env.NODE_ENV !== 'production';
 const log4js = require('log4js');
@@ -112,7 +113,14 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
 
 app.get('/webhooks/updateAllCitations', (req, res) => {
   const response = updateAllCitations();
-  if (response === 'Updated OK')
+  if (response.include('updated'))
+    return res.status(200).send(response);
+  res.status(424).send('Error!');
+});
+
+app.get('/webhooks/updateAllTexts', (req, res) => {
+  const response = updateAllTexts();
+  if (response.include('updated'))
     return res.status(200).send(response);
   res.status(424).send('Error!');
 });
