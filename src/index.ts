@@ -1,5 +1,6 @@
 import { error } from 'console';
 import express from 'express';
+import { Request, Response, } from 'express';
 const port = 3000;
 
 const googleToEvernote = require('./tasks/GoogleToEvernote.js');
@@ -17,8 +18,8 @@ const loggerLevel = dev ? 'debug' : 'debug';
 const logAppender = dev ? 'console' : 'console';
 const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 
-const asyncHandler = (fun) => (req, res, next) => {
-  Promise.resolve(fun(req, res, next))
+const asyncHandler = (func: any) => (req: Request, res: Response, next: any) => {
+  Promise.resolve(func(req, res, next))
     .catch(next)
 }
 
@@ -65,21 +66,22 @@ app.get('/stats', (req, res) => {
   res.status(403).send('Bad request');
 });
 
-app.get('/pings/database', (req, res) => {
-  const response = pingDatabase();
-  res.status(200).send(response.toString());
-  // if (req.query.googleDocsId) {
-  //   res.status(200).send(response);
-  //   googleToStatistics(req.query.googleDocsId);
-  // } else {
-  //   res.status(424).send('Database query failed');
-  // }
-});
+// app.get('/pings/database', (req, res) => {
+//   const response = pingDatabase();
+//   res.status(200).send(response.toString());
+//   // if (req.query.googleDocsId) {
+//   //   res.status(200).send(response);
+//   //   googleToStatistics(req.query.googleDocsId);
+//   // } else {
+//   //   res.status(424).send('Database query failed');
+//   // }
+// });
 
-app.get('/pings/database', asyncHandler(async (req, res) => {
+app.get('/pings/database', asyncHandler(async (req: Request, res: Response) => {
   const response = await Promise.all([
     pingDatabase()
   ])
+
   return res.send(response)
 }));
 
