@@ -112,14 +112,14 @@ app.get('/webhooks/googleDocUpdated', (req, res) => {
 
 app.get('/webhooks/updateAllCitations', (req, res) => {
   const response = updateAllCitations();
-  if (response.includes('updated'))
+  if (response.includes('Updated'))
     return res.status(200).send(response);
   res.status(424).send(response);
 });
 
 app.get('/webhooks/updateAllTexts', (req, res) => {
   const response = updateAllTexts();
-  if (response.includes('updated'))
+  if (response.includes('Updated'))
     return res.status(200).send(response);
   res.status(424).send(response);
 });

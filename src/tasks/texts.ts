@@ -182,9 +182,9 @@ const updateAllTexts = async () => {
         return result.rowCount;
       })
     );
-    console.log(chalk.bold.green(`Updated ${texts.length} texts!`));
+    return `Updated ${texts.length} texts!`;
   } catch (error) {
-    console.log(chalk.bold.red(`Updating texts failed: ${error}`));
+    return `Updating texts failed: ${error}`;
   }
 
   client.end();

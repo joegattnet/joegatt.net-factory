@@ -93,10 +93,11 @@ const updateAllCitations = async () => {
         return result.rowCount;
       })
     );
-    console.log(chalk.bold.green(`Updated ${citations.length} citations!`));
+    return `Updated ${citations.length} citations!`;
   } catch (error) {
-    console.log(chalk.bold.red(`Updating citations failed: ${error}`));
+    return `Updating citations failed: ${error}`;
   }
+
 
   client.end();
   process.exit();
