@@ -43,6 +43,16 @@ interface UpdateCitationValues {
   path: string;
 }
 
+interface UpdateTextValues {
+  annotationsCount: number,
+  blurb: string;
+  body: string;
+  headline: string;
+  id: number;
+  path: string;
+  subheadline: string;
+}
+
 interface ContentChunk {
   paragraph: {
     elements: [
@@ -98,5 +108,5 @@ interface GoogleDocsParams {
 }
 
 interface Vocabulary {
-  [key: string]: number 
+  [key: string]: number
 }
