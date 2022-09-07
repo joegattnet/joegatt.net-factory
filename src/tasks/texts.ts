@@ -32,7 +32,7 @@ const updateTextSql = `
   SET cached_url = $2,
     cached_blurb_html = $3,
     cached_headline = $4,
-    cached_subheadline = $5,
+    cached_subHeadline = $5,
     cached_body_html = $6,
     annotations_count = $7,
     groomed_at = NOW()
@@ -135,7 +135,7 @@ const formatText = (note: Note) => {
   const blurb = tidyHtml(`<h4>${clean(note.title)}</h4>`);
 
   const headline = clean(splitTitle[0]);
-  const subheadline = splitTitle[1] ? clean(splitTitle[1]) : null;
+  const subHeadline = splitTitle[1] ? clean(splitTitle[1]) : null;
   const body = tidyHtml(`
     <section class="body">${text}</section>
     <section id="annotations">
@@ -154,7 +154,7 @@ const formatText = (note: Note) => {
     blurb: blurb.trim(),
     body: body.trim(),
     headline: headline.trim(),
-    subheadline: subheadline.trim(),
+    subHeadline: subHeadline.trim(),
     annotationsCount: annotations.length,
   };
 };
@@ -166,7 +166,7 @@ const updateText = async (values: UpdateTextValues) => {
     values.blurb,
     values.body,
     values.headline,
-    values.subheadline,
+    values.subHeadline,
     values.annotationsCount,
   ]);
   return result;

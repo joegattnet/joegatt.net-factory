@@ -44,13 +44,13 @@ interface UpdateCitationValues {
 }
 
 interface UpdateTextValues {
-  annotationsCount: number,
+  annotationsCount: number;
   blurb: string;
   body: string;
   headline: string;
   id: number;
   path: string;
-  subheadline: string;
+  subHeadline: string;
 }
 
 interface ContentChunk {
