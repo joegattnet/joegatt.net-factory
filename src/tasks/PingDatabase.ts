@@ -9,6 +9,7 @@ client.connect();
 const selectNoteSql = `
   SELECT id
   FROM notes
+  WHERE lang = 'en'
   LIMIT 1
 `;
 
@@ -20,7 +21,7 @@ const fetchNote = async () => {
 const pingDatabase = async () => {
   try {
     const note = await fetchNote();
-    return note;
+    return note.lang;
   } catch (error) {
     console.log('Query failed.');
   }
