@@ -17,6 +17,11 @@ const loggerLevel = dev ? 'debug' : 'debug';
 const logAppender = dev ? 'console' : 'console';
 const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 
+const asyncHandler = (fun) => (req, res, next) => {
+  Promise.resolve(fun(req, res, next))
+    .catch(next)
+}
+
 if (!evernoteNotebooks) {
   throw new Error('ERROR: EVERNOTE_NOTEBOOKS as environment variable is missing!');
 }
@@ -71,6 +76,12 @@ app.get('/pings/database', (req, res) => {
   // }
 });
 
+app.get('/pings/database', asyncHandler(async (req, res) => {
+  const response = await Promise.all([
+    pingDatabase()
+  ])
+  return res.send(response)
+}));
 
 app.get('/pings/typescript', (req, res) => {
   const response = pingTypescript();
