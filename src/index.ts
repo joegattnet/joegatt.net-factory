@@ -56,7 +56,7 @@ const app = express();
 app.use(log4js.connectLogger(logger, { level: loggerLevel }));
 
 app.get('/', ( req, res ) => {
-  res.send("Hello world!");
+  res.send("HELLO WORLD");
 });
 
 app.get('/stanza', (req, res) => {
