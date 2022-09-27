@@ -16,7 +16,7 @@ const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = dev ? 'debug' : 'debug';
-const logAppender = dev ? 'console' : 'console';
+const logAppender = dev ? 'slack' : 'slack';
 
 const asyncHandler = (func: any) => (req: Request, res: Response, next: any) => {
   Promise.resolve(func(req, res, next))
@@ -29,7 +29,15 @@ if (!evernoteNotebooks) {
 
 log4js.configure({
   appenders: {
+    slack: {
+      type: '@log4js-node/slack',
+      layout: { type: 'messagePassThrough' },
+      token: process.env.SLACK_BOT_TOKEN,
+      channel_id: 'factory-logs',
+      user_name: 'joegattnet-factory'
+    },
     console: {
+      layout: { type: 'coloured' },
       app: 'joegatt.net-factory',
       type: 'stdout',
       fields: {
@@ -87,8 +95,11 @@ app.get('/pings/database', asyncHandler(async (req: Request, res: Response) => {
 
 app.get('/pings/typescript', (req, res) => {
   const response = pingTypescript();
-  if (response === 'Ping Typescript OK')
+  if (response === 'Ping Typescript OK') {
+    logger.info('Pinged typescript OK');
     return res.status(200).send(response);
+  }
+  logger.info('Pinged typescript FAILED');
   res.status(424).send('Typescript failed');
 });
 
@@ -129,5 +140,5 @@ app.use(function(req, res, next) {
 });
 
 app.listen(port, () => {
-    console.log(`Server started at http://localhost:${ port }`);
+    logger.info(`Server started at http://localhost:${ port } (${ process.env.NODE_ENV })`);
 });

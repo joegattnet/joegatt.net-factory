@@ -19,7 +19,7 @@ const selectSql = `
 `;
 
 const updateTextSql = `
-  UPDATE notes 
+  UPDATE notes
   SET cached_url = $2,
     cached_blurb_html = $3,
     cached_headline = $4,
