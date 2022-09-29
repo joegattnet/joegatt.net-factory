@@ -14,7 +14,7 @@
     "build": "tsc",
     "lint": "eslint .",
     "prepush": "npm run lint && npm test",
-    "start": "node .",
+    "start": "nodemon .", // "start": "node .", move nodemon to dev USE pm2 for production
     "test": "jest --coverage",
     "test:watch": "jest --watch",
     "tsc": "tsc",
