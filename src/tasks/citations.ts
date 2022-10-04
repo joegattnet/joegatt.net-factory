@@ -117,9 +117,10 @@ const updateCitation = async (values: UpdateCitationValues) => {
 };
 
 const updateAllCitations = async () => {
+  logger.info(`Running!`);
   try {
     const citations = await fetchCitations();
-    logger.error(`Found ${citations.length} citations!`);
+    logger.info(`Found ${citations.length} citations!`);
     await Promise.all(
       citations.map(async (citation: Note) => {
         const formattedCitation = formatCitation(citation);
