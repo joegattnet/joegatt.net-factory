@@ -175,6 +175,7 @@ const updateText = async (values: UpdateTextValues) => {
 const updateAllTexts = async () => {
   try {
     const texts = await fetchTexts();
+    console.log(`Found ${texts.length} citations!`);
     await Promise.all(
       texts.map(async (text: Note) => {
         const formattedText = formatText(text);
