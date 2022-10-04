@@ -18,6 +18,37 @@ const thirty = require("../components/thirty");
 const truncate = require("../components/truncate");
 const tidyHtml = require("../components/tidyHtml");
 
+// ****************************
+const log4js = require('log4js');
+const logger = log4js.getLogger();
+const loggerLevel = 'debug';
+const logAppender = 'slack';
+
+log4js.configure({
+  appenders: {
+    slack: {
+      type: '@log4js-node/slack',
+      layout: { type: 'messagePassThrough' },
+      token: process.env.SLACK_BOT_TOKEN,
+      channel_id: 'factory-logs',
+      user_name: 'joegattnet-factory'
+    },
+    console: {
+      layout: { type: 'coloured' },
+      app: 'joegatt.net-factory',
+      type: 'stdout',
+      fields: {
+        env: process.env.NODE_ENV,
+        app_name: 'joegatt.net-factory'
+      }
+    }
+  },
+  categories: {
+    default: { appenders: [logAppender], level: loggerLevel }
+  }
+});
+// ****************************
+
 const client = new Client(config.DB_CONNECTION);
 client.connect();
 
@@ -88,7 +119,7 @@ const updateCitation = async (values: UpdateCitationValues) => {
 const updateAllCitations = async () => {
   try {
     const citations = await fetchCitations();
-    console.log(`Found ${citations.length} citations!`);
+    logger.error(`Found ${citations.length} citations!`);
     await Promise.all(
       citations.map(async (citation: Note) => {
         const formattedCitation = formatCitation(citation);
