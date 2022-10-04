@@ -1,3 +1,5 @@
+import { Logger } from "log4js";
+
 export {};
 
 const chalk = require("chalk");
@@ -86,6 +88,7 @@ const updateCitation = async (values: UpdateCitationValues) => {
 const updateAllCitations = async () => {
   try {
     const citations = await fetchCitations();
+    console.log(`Found ${citations.length} citations!`);
     await Promise.all(
       citations.map(async (citation: Note) => {
         const formattedCitation = formatCitation(citation);

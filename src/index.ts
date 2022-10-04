@@ -125,14 +125,14 @@ app.get('/webhooks/updateAllCitations', (req, res) => {
   const response = updateAllCitations();
   if (response)
     return res.status(200).send(response);
-  res.status(424).send(response);
-});
+    res.status(500).send('500: Internal Server Error');
+  });
 
 app.get('/webhooks/updateAllTexts', (req, res) => {
   const response = updateAllTexts();
   if (response)
     return res.status(200).send(response);
-  res.status(424).send(response);
+  res.status(500).send('500: Internal Server Error');
 });
 
 app.use(function(req, res, next) {
