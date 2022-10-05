@@ -24,7 +24,7 @@ const selectTextsSql = `
   FROM notes
   WHERE content_type = 0
   ORDER BY groomed_at
-  LIMIT 999
+  LIMIT 1
 `;
 
 const updateTextSql = `
