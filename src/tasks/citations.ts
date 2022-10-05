@@ -87,14 +87,14 @@ const formatCitation = (note: Note): UpdateCitationValues => {
   const path = `/citations/${note.id}`;
   const blurb = tidyHtml(`
     <figure class="citation">
-      <blockquote>${blurbText}</blockquote>
-      <figcaption>${blurbAttribution}</figcaption>
+      <blockquote>YY-SANITYTEST-YY${blurbText}</blockquote>
+      <figcaption>YY-SANITYTEST-YY${blurbAttribution}</figcaption>
     </figure>
   `);
   const body = tidyHtml(`
     <figure class="citation">
-      <blockquote>${bodyText}</blockquote>
-      <figcaption>${bodyAttribution}</figcaption>
+      <blockquote>XX-SANITYTEST-XX${bodyText}</blockquote>
+      <figcaption>XX-SANITYTEST-XX${bodyAttribution}</figcaption>
     </figure>
   `);
 
