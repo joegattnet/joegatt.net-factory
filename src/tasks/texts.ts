@@ -95,7 +95,7 @@ const formatText = (note: Note) => {
     return `<a class="annotation-mark">${annotationsIndex}</a>`;
   });
 
-  console.log(chalk.black.bgYellow(annotations.join()));
+  // console.log(chalk.black.bgYellow(annotations.join()));
 
   text = text.replace(
     cleanOrphanedAnnotations,
@@ -123,10 +123,10 @@ const formatText = (note: Note) => {
 
   text = text.replace(/classname/gim, "class");
 
-  console.log(chalk.red(text.replace(/\u00AD/g, "~")));
-  Object.keys(note)
-    .sort()
-    .forEach((key) => console.log(chalk.magenta(key)));
+  // console.log(chalk.red(text.replace(/\u00AD/g, "~")));
+  // Object.keys(note)
+  //   .sort()
+  //   .forEach((key) => console.log(chalk.magenta(key)));
 
   // Needs to be different if this is a feature, etc
   const path = `/texts/${note.id}`;
