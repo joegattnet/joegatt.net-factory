@@ -16,6 +16,40 @@ const thirty = require("../components/thirty");
 // const truncate = require("../components/truncate");
 const tidyHtml = require("../components/tidyHtml");
 
+// ****************************
+const log4js = require('log4js');
+const logger = log4js.getLogger();
+const loggerLevel = 'trace';
+const logAppender = 'slack';
+console.log = (msg) => logger.trace(msg);
+
+console.log('testing texts!');
+
+log4js.configure({
+  appenders: {
+    slack: {
+      type: '@log4js-node/slack',
+      layout: { type: 'messagePassThrough' },
+      token: process.env.SLACK_BOT_TOKEN,
+      channel_id: 'factory-logs',
+      user_name: 'joegattnet-factory'
+    },
+    console: {
+      layout: { type: 'coloured' },
+      app: 'joegatt.net-factory',
+      type: 'stdout',
+      fields: {
+        env: process.env.NODE_ENV,
+        app_name: 'joegatt.net-factory'
+      }
+    }
+  },
+  categories: {
+    default: { appenders: [logAppender], level: loggerLevel }
+  }
+});
+// ****************************
+
 const client = new Client(config.DB_CONNECTION);
 client.connect();
 
@@ -175,7 +209,7 @@ const updateText = async (values: UpdateTextValues) => {
 const updateAllTexts = async () => {
   try {
     const texts = await fetchTexts();
-    console.log(`Found ${texts.length} citations!`);
+    console.log(`Found ${texts.length} texts!`);
     await Promise.all(
       texts.map(async (text: Note) => {
         const formattedText = formatText(text);

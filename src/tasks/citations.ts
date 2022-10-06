@@ -21,8 +21,11 @@ const tidyHtml = require("../components/tidyHtml");
 // ****************************
 const log4js = require('log4js');
 const logger = log4js.getLogger();
-const loggerLevel = 'debug';
+const loggerLevel = 'trace';
 const logAppender = 'slack';
+console.log = (msg) => logger.trace(msg);
+
+console.log('testing citations!');
 
 log4js.configure({
   appenders: {
