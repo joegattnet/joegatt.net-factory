@@ -47,7 +47,7 @@ log4js.configure({
 const logger = log4js.getLogger();
 console.log = (msg) => logger.trace(msg);
 
-console.log('testing texts!');
+console.log('console.log testing texts!');
 
 // ****************************
 
