@@ -37,8 +37,6 @@ log4js.configure({
 const logger = log4js.getLogger();
 console.log = (msg) => logger.trace(msg);
 
-console.log('console.log testing PingsDatabase!');
-
 // ****************************
 
 
@@ -55,6 +53,7 @@ const fetchNote = async () => {
 };
 
 const pingDatabase = async () => {
+  console.log('console.log testing PingsDatabase!');
   try {
     const note = await fetchNote();
     console.log(note);
