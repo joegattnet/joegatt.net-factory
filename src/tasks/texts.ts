@@ -18,12 +18,8 @@ const tidyHtml = require("../components/tidyHtml");
 
 // ****************************
 const log4js = require('log4js');
-const logger = log4js.getLogger();
 const loggerLevel = 'trace';
 const logAppender = 'slack';
-console.log = (msg) => logger.trace(msg);
-
-console.log('testing texts!');
 
 log4js.configure({
   appenders: {
@@ -48,6 +44,11 @@ log4js.configure({
     default: { appenders: [logAppender], level: loggerLevel }
   }
 });
+const logger = log4js.getLogger();
+console.log = (msg) => logger.trace(msg);
+
+console.log('testing texts!');
+
 // ****************************
 
 const client = new Client(config.DB_CONNECTION);
