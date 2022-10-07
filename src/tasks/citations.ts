@@ -33,7 +33,7 @@ log4js.configure({
       type: '@log4js-node/slack',
       layout: { type: 'messagePassThrough' },
       token: process.env.SLACK_BOT_TOKEN,
-      channel_id: 'factory-logs',
+      channel_id: 'factory-console',
       user_name: 'joegattnet-factory'
     },
     console: {

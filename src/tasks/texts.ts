@@ -27,7 +27,7 @@ log4js.configure({
       type: '@log4js-node/slack',
       layout: { type: 'messagePassThrough' },
       token: process.env.SLACK_BOT_TOKEN,
-      channel_id: 'factory-logs',
+      channel_id: 'factory-console',
       user_name: 'joegattnet-factory'
     },
     console: {
@@ -46,8 +46,6 @@ log4js.configure({
 });
 const logger = log4js.getLogger();
 console.log = (msg) => logger.trace(msg);
-
-console.log('console.log testing texts!');
 
 // ****************************
 
@@ -208,6 +206,7 @@ const updateText = async (values: UpdateTextValues) => {
 };
 
 const updateAllTexts = async () => {
+  console.log('console.log testing texts!');
   try {
     const texts = await fetchTexts();
     console.log(`Found ${texts.length} texts!`);
