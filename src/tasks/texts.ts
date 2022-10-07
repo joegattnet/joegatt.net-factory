@@ -27,7 +27,7 @@ log4js.configure({
       type: '@log4js-node/slack',
       layout: { type: 'messagePassThrough' },
       token: process.env.SLACK_BOT_TOKEN,
-      channel_id: 'factory-console',
+      channel_id: process.env.SLACK_CHANNEL_ID_FACTORY_CONSOLE,
       user_name: 'joegattnet-factory'
     },
     console: {
@@ -181,6 +181,8 @@ const formatText = (note: Note) => {
     </section>
   `);
 
+  console.log("formatText", path, blurb, body, headline, subHeadline, annotations.length);
+
   return {
     id: note.id,
     path: path,
@@ -193,6 +195,8 @@ const formatText = (note: Note) => {
 };
 
 const updateText = async (values: UpdateTextValues) => {
+
+  console.log("updateText", values);
   const result = await client.query(updateTextSql, [
     values.id,
     values.path,
