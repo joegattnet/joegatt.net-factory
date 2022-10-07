@@ -22,7 +22,7 @@ const tidyHtml = require("../components/tidyHtml");
 const log4js = require('log4js');
 const logger = log4js.getLogger();
 const loggerLevel = 'trace';
-const logAppender = 'slack';
+const logAppender = 'console';
 console.log = (msg) => logger.trace(msg);
 
 console.log('testing citations!');
