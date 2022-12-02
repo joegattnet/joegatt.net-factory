@@ -15,7 +15,7 @@ const dev = process.env.NODE_ENV !== 'production';
 const evernoteNotebooks = process.env.EVERNOTE_NOTEBOOKS && process.env.EVERNOTE_NOTEBOOKS.split(',');
 const log4js = require('log4js');
 const logger = log4js.getLogger();
-const loggerLevel = dev ? 'debug' : 'error';
+const loggerLevel = dev ? 'warn' : 'warn';
 const logAppender = dev ? 'slack' : 'slack';
 
 const asyncHandler = (func: any) => (req: Request, res: Response, next: any) => {
